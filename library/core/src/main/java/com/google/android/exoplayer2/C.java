@@ -765,7 +765,7 @@ public final class C {
 
   // Begin add for WisePlay
   /**
-   * DRM Kit UUID
+   * WisePlay UUID
    */
   public static final UUID WISEPLAY_UUID = new UUID(0X3D5E6D359B9A41E8L, 0XB843DD3C6E72C42CL);
   // End add for WisePlay
