@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">49.4.9.180</domain>
+        <domain includeSubdomains="true">117.78.34.30</domain>
+        <domain includeSubdomains="true">218.240.129.155</domain>
+        <domain includeSubdomains="true">58.240.82.122</domain>
+        <domain includeSubdomains="true">172.100.20.44</domain>
+        <domain includeSubdomains="true">10.27.0.195</domain>
+        <domain includeSubdomains="true">114.116.245.195</domain>
+        <domain includeSubdomains="true">139.9.114.174</domain>
+        <domain includeSubdomains="true">117.78.36.94</domain>
+        <domain includeSubdomains="true">119.3.184.207</domain>
+        <domain includeSubdomains="true">121.36.63.105</domain>
+        <domain includeSubdomains="true">121.36.78.83</domain>
+    </domain-config>
+</network-security-config>

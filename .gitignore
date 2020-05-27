@@ -1,0 +1,12 @@
+/demos/cast/buildout/
+/.gradle/
+/.idea/
+/demos/main/buildout/
+/demos/gl/buildout/
+/demos/surface/buildout/
+/extensions/cast/buildout/
+/library/core/buildout/
+/library/dash/buildout/
+/library/hls/buildout/
+/library/smoothstreaming/buildout/
+/library/ui/buildout/
