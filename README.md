@@ -15,4 +15,8 @@ For example, in the class "com.google.android.exoplayer2.C", the modification is
   // End add for WisePlay
 ```
 
+Find more about HMS Wiseplay Kit, for example, offline license managment, please refer to another [wiseplay demo](https://github.com/HMS-Core/hms-wiseplay-demo)
 
+
+##  License
+pushkit PHP sample is licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
