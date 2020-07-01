@@ -1,5 +1,10 @@
 # HMS WisePlay Demo Based On Exoplayer #
 
+
+![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
+
+中文 | [English](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md)
+
 ## 目录
 
  * [介绍](#介绍)
@@ -26,7 +31,6 @@ Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/E
 
 想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [wiseplay demo](https://github.com/HMS-Core/hms-wiseplay-demo) 以及[开发者联盟官方](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
     
-本说明文档的英文版本地址：https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md
 
 ## 开始
 
