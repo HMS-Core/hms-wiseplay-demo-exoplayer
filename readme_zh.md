@@ -24,15 +24,18 @@ Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/E
   // End add for WisePlay
 ```
 
-想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [wiseplay demo](https://github.com/HMS-Core/hms-wiseplay-demo)    
-本说明文档的英文本地址：https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md
+想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [wiseplay demo](https://github.com/HMS-Core/hms-wiseplay-demo) 以及[开发者联盟官方](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
+    
+本说明文档的英文版本地址：https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md
 
 ## 开始
 
 使用Demo之前, 请确保手机上正确安装HMS Core 4.0+.
 
 1.检查Android Studio环境是否就绪，网络正常连接.
-2.运行Demo中的app工程.  
+2.运行Demo中的main demo工程.  
+
+ExoPlayer Demo执行的细节，可参考其[官方说明](https://github.com/google/ExoPlayer/blob/release-v2/demos/README.md)
 
 ## 开发环境
 
