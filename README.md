@@ -1,4 +1,4 @@
-# HMS WisePlay Demo Based On Exoplayer #
+# WisePlay DRM Demo Based On Exoplayer #
 
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
 
@@ -13,10 +13,10 @@ English | [中文](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/
  
 ## Introduction
 
-This demo provides an example of integrating HMS WisePlay Kit with the ExoPlayer project for Android. 
+This demo provides an example of integrating WisePlay DRM with the ExoPlayer project for Android. 
 For more detail about ExoPlayer, please follow [ExoPlayer's official document](https://exoplayer.dev/)
 
-The demo is based on ExoPlayer [r2.11.4](https://github.com/google/ExoPlayer/releases/tag/r2.11.4), it shows how to play online WisePlay Drm streamings. the modification is comment by keyword "*Begin add for WisePlay*" or "*Begin mod for WisePlay*" 
+The demo is based on ExoPlayer [r2.11.4](https://github.com/google/ExoPlayer/releases/tag/r2.11.4), it shows how to play online WisePlay DRM streamings. the modification is comment by keyword "*Begin add for WisePlay*" or "*Begin mod for WisePlay*" 
 
 For example, in the class "com.google.android.exoplayer2.C", the modification is as follows:
 ```java
@@ -28,7 +28,7 @@ For example, in the class "com.google.android.exoplayer2.C", the modification is
   // End add for WisePlay
 ```
 
-Find more about HMS Wiseplay Kit, for example, offline license managment, please refer to another demo [WisePlay Kit Demo](https://github.com/HMS-Core/hms-wiseplay-demo) and [WisePlay Kit Official Website](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
+Find more about WisePlay DRM, for example, offline license managment, please refer to another demo [WisePlay DRM Demo](https://github.com/HMS-Core/hms-wiseplay-demo) and [WisePlay DRM Official Website](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
     
 
 ## Getting Started
