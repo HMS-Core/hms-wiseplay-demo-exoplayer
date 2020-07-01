@@ -10,9 +10,9 @@
 ## Introduction
 
 This demo provides an example of integrating HMS WisePlay Kit with the ExoPlayer project for Android. 
-For more detail about exoplayer, please follow [exoplayer's official document](https://exoplayer.dev/)
+For more detail about ExoPlayer, please follow [ExoPlayer's official document](https://exoplayer.dev/)
 
-The demo is based on exoplayer [r2.11.4](https://github.com/google/ExoPlayer/releases/tag/r2.11.4), it shows how to play online WisePlay Drm streamings. the modification is comment by keyword "*Begin add for WisePlay*" or "*Begin mod for WisePlay*" 
+The demo is based on ExoPlayer [r2.11.4](https://github.com/google/ExoPlayer/releases/tag/r2.11.4), it shows how to play online WisePlay Drm streamings. the modification is comment by keyword "*Begin add for WisePlay*" or "*Begin mod for WisePlay*" 
 
 For example, in the class "com.google.android.exoplayer2.C", the modification is as follows:
 ```java
@@ -24,17 +24,21 @@ For example, in the class "com.google.android.exoplayer2.C", the modification is
   // End add for WisePlay
 ```
 
-Find more about HMS Wiseplay Kit, for example, offline license managment, please refer to another [wiseplay demo](https://github.com/HMS-Core/hms-wiseplay-demo)
+Find more about HMS Wiseplay Kit, for example, offline license managment, please refer to another demo [WisePlay Kit Demo](https://github.com/HMS-Core/hms-wiseplay-demo) and [WisePlay Kit Official Website](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
+    
+The chinese version of this README: https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/readme_zh.md
 
 ## Getting Started
 
 To use functions provided by examples, please make sure Huawei Mobile Service 4.0+ has been installed on your cellphone.    
 1. Check whether the Android studio development environment is ready.     
-2. Run the app on your Android device or emulator which have installed latest Huawei Mobile Service(HMS).  
+2. Run the main demo on your Android device or emulator which have installed latest Huawei Mobile Service(HMS). 
+    
+The detail of run ExoPlayer demo, please follow [ExoPlayer's introduction](https://github.com/google/ExoPlayer/blob/release-v2/demos/README.md)
 
 ## Supported Environments
 
 Android SDK Version >= 23 and JDK version >= 1.7 is recommended.
 
 ##  License
-pushkit PHP sample is licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+The demo code is licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
