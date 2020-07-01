@@ -2,6 +2,8 @@
 
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
 
+English | [中文](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/readme_zh.md)
+
 ## Table of Contents
 
  * [Introduction](#introduction)
@@ -28,7 +30,6 @@ For example, in the class "com.google.android.exoplayer2.C", the modification is
 
 Find more about HMS Wiseplay Kit, for example, offline license managment, please refer to another demo [WisePlay Kit Demo](https://github.com/HMS-Core/hms-wiseplay-demo) and [WisePlay Kit Official Website](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
     
-The chinese version of this README: https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/readme_zh.md
 
 ## Getting Started
 
