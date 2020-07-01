@@ -1,4 +1,4 @@
-# HMS WisePlay Demo Based On Exoplayer #
+# WisePlay DRM Demo Based On ExoPlayer #
 
 
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
@@ -14,7 +14,7 @@
  
 ## 介绍
 
-这个Demo演示了如何在开源播放器ExoPlayer中集成HMS WisePlay Kit，关于ExoPlayer的更多介绍，请参考其官网：[ExoPlayer官网](https://exoplayer.dev/)
+这个Demo演示了如何在开源播放器ExoPlayer中集成WisePlay DRM，关于ExoPlayer的更多介绍，请参考其官网：[ExoPlayer官网](https://exoplayer.dev/)
 
 Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/ExoPlayer/releases/tag/r2.11.4), 演示了如何在线播放WisePlay加密片源。
 代码中对ExoPlayer的修改均以关键如下的注释标记 "*Begin add for WisePlay*"或"*Begin mod for WisePlay*" ，搜索代码的改动点，可根据这些关键字进行搜索。
@@ -29,7 +29,7 @@ Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/E
   // End add for WisePlay
 ```
 
-想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [wiseplay demo](https://github.com/HMS-Core/hms-wiseplay-demo) 以及[开发者联盟官方](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
+想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [WisePlay DRM Demo](https://github.com/HMS-Core/hms-wiseplay-demo) 以及[开发者联盟官网](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)    
     
 
 ## 开始
