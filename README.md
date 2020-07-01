@@ -1,5 +1,7 @@
 # HMS WisePlay Demo Based On Exoplayer #
 
+![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
+
 ## Table of Contents
 
  * [Introduction](#introduction)
