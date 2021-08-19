@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed Add sm4 support
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.extractor.mp4;
 
@@ -22,7 +25,7 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Log;
 
 /**
- * Encapsulates information parsed from a track encryption (tenc) box or sample group description 
+ * Encapsulates information parsed from a track encryption (tenc) box or sample group description
  * (sgpd) box in an MP4 stream.
  */
 public final class TrackEncryptionBox {
@@ -92,6 +95,10 @@ public final class TrackEncryptionBox {
         return C.CRYPTO_MODE_AES_CTR;
       case C.CENC_TYPE_cbc1:
       case C.CENC_TYPE_cbcs:
+      // Begin add for sm4
+      case C.CENC_TYPE_sm4c:
+      case C.CENC_TYPE_sm4s:
+      // End add for sm4
         return C.CRYPTO_MODE_AES_CBC;
       default:
         Log.w(TAG, "Unsupported protection scheme type '" + schemeType + "'. Assuming AES-CTR "

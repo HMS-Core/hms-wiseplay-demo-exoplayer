@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed add hls and WisePlayDrm support
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.source.hls;
 
@@ -19,6 +22,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.extractor.Extractor;
 import com.google.android.exoplayer2.extractor.ExtractorInput;
 import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor;
@@ -88,6 +92,7 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
       Uri uri,
       Format format,
       @Nullable List<Format> muxedCaptionFormats,
+      DrmInitData drmInitData,
       TimestampAdjuster timestampAdjuster,
       Map<String, List<String>> responseHeaders,
       ExtractorInput extractorInput)
@@ -109,7 +114,7 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
 
     // Try selecting the extractor by the file extension.
     Extractor extractorByFileExtension =
-        createExtractorByFileExtension(uri, format, muxedCaptionFormats, timestampAdjuster);
+        createExtractorByFileExtension(uri, format, muxedCaptionFormats, drmInitData, timestampAdjuster);
     extractorInput.resetPeekPosition();
     if (sniffQuietly(extractorByFileExtension, extractorInput)) {
       return buildResult(extractorByFileExtension);
@@ -169,7 +174,8 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
               exposeCea608WhenMissingDeclarations,
               format,
               muxedCaptionFormats,
-              timestampAdjuster);
+              timestampAdjuster,
+              drmInitData);
       if (sniffQuietly(tsExtractor, extractorInput)) {
         return buildResult(tsExtractor);
       }
@@ -183,6 +189,7 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
       Uri uri,
       Format format,
       @Nullable List<Format> muxedCaptionFormats,
+      DrmInitData drmInitData,
       TimestampAdjuster timestampAdjuster) {
     String lastPathSegment = uri.getLastPathSegment();
     if (lastPathSegment == null) {
@@ -213,7 +220,8 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
           exposeCea608WhenMissingDeclarations,
           format,
           muxedCaptionFormats,
-          timestampAdjuster);
+          timestampAdjuster,
+          drmInitData);
     }
   }
 
@@ -222,7 +230,8 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
       boolean exposeCea608WhenMissingDeclarations,
       Format format,
       @Nullable List<Format> muxedCaptionFormats,
-      TimestampAdjuster timestampAdjuster) {
+      TimestampAdjuster timestampAdjuster,
+      DrmInitData drmInitData) {
     @DefaultTsPayloadReaderFactory.Flags
     int payloadReaderFactoryFlags =
         DefaultTsPayloadReaderFactory.FLAG_IGNORE_SPLICE_INFO_STREAM
@@ -259,7 +268,7 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
     return new TsExtractor(
         TsExtractor.MODE_HLS,
         timestampAdjuster,
-        new DefaultTsPayloadReaderFactory(payloadReaderFactoryFlags, muxedCaptionFormats));
+        new DefaultTsPayloadReaderFactory(payloadReaderFactoryFlags, muxedCaptionFormats), drmInitData);
   }
 
   private static FragmentedMp4Extractor createFragmentedMp4Extractor(

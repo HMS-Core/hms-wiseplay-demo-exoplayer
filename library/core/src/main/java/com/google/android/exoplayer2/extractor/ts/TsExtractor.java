@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed Add params for createPayloadReader()
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.extractor.ts;
 
@@ -23,6 +26,7 @@ import android.util.SparseIntArray;
 import androidx.annotation.IntDef;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ParserException;
+import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.extractor.Extractor;
 import com.google.android.exoplayer2.extractor.ExtractorInput;
 import com.google.android.exoplayer2.extractor.ExtractorOutput;
@@ -130,6 +134,8 @@ public final class TsExtractor implements Extractor {
   private int bytesSinceLastSync;
   private int pcrPid;
 
+  private DrmInitData drmInitData = null;
+
   public TsExtractor() {
     this(0);
   }
@@ -181,6 +187,25 @@ public final class TsExtractor implements Extractor {
     durationReader = new TsDurationReader();
     pcrPid = -1;
     resetPayloadReaders();
+  }
+
+  /**
+   * @param mode Mode for the extractor. One of {@link #MODE_MULTI_PMT}, {@link #MODE_SINGLE_PMT}
+   *     and {@link #MODE_HLS}.
+   * @param timestampAdjuster A timestamp adjuster for offsetting and scaling sample timestamps.
+   * @param payloadReaderFactory Factory for injecting a custom set of payload readers.
+   * @param drmInitData The {@link DrmInitData} to use for encrypted tracks. If null, the
+   *    *     pmt section (if present) will be used.
+   */
+  public TsExtractor(
+          @Mode int mode,
+          TimestampAdjuster timestampAdjuster,
+          TsPayloadReader.Factory payloadReaderFactory,
+          DrmInitData drmInitData) {
+    this(mode,
+            timestampAdjuster,
+            payloadReaderFactory);
+    this.drmInitData = drmInitData;
   }
 
   // Extractor implementation.
@@ -499,11 +524,13 @@ public final class TsExtractor implements Extractor {
     private static final int TS_PMT_DESC_DVBSUBS = 0x59;
 
     private static final int TS_PMT_DESC_DVB_EXT_AC4 = 0x15;
+    private static final int TS_PMT_DESC_CDRM = 0xC0;
 
     private final ParsableBitArray pmtScratch;
     private final SparseArray<TsPayloadReader> trackIdToReaderScratch;
     private final SparseIntArray trackIdToPidScratch;
     private final int pid;
+    private byte encryptionMethod = 0x0;
 
     public PmtReader(int pid) {
       pmtScratch = new ParsableBitArray(new byte[5]);
@@ -553,15 +580,14 @@ public final class TsExtractor implements Extractor {
       sectionData.readBytes(pmtScratch, 2);
       pmtScratch.skipBits(4);
       int programInfoLength = pmtScratch.readBits(12);
-
-      // Skip the descriptors.
-      sectionData.skipBytes(programInfoLength);
+      //read descriptor data
+      readEsInfo(sectionData, programInfoLength);
 
       if (mode == MODE_HLS && id3Reader == null) {
         // Setup an ID3 track regardless of whether there's a corresponding entry, in case one
         // appears intermittently during playback. See [Internal: b/20261500].
         EsInfo dummyEsInfo = new EsInfo(TS_STREAM_TYPE_ID3, null, null, Util.EMPTY_BYTE_ARRAY);
-        id3Reader = payloadReaderFactory.createPayloadReader(TS_STREAM_TYPE_ID3, dummyEsInfo);
+        id3Reader = payloadReaderFactory.createPayloadReader(TS_STREAM_TYPE_ID3, dummyEsInfo, drmInitData, encryptionMethod);
         id3Reader.init(timestampAdjuster, output,
             new TrackIdGenerator(programNumber, TS_STREAM_TYPE_ID3, MAX_PID_PLUS_ONE));
       }
@@ -588,7 +614,7 @@ public final class TsExtractor implements Extractor {
         }
 
         TsPayloadReader reader = mode == MODE_HLS && streamType == TS_STREAM_TYPE_ID3 ? id3Reader
-            : payloadReaderFactory.createPayloadReader(streamType, esInfo);
+            : payloadReaderFactory.createPayloadReader(streamType, esInfo, drmInitData, encryptionMethod);
         if (mode != MODE_HLS
             || elementaryPid < trackIdToPidScratch.get(trackId, MAX_PID_PLUS_ONE)) {
           trackIdToPidScratch.put(trackId, elementaryPid);
@@ -683,6 +709,10 @@ public final class TsExtractor implements Extractor {
             data.readBytes(initializationData, 0, 4);
             dvbSubtitleInfos.add(new DvbSubtitleInfo(dvbLanguage, dvbSubtitlingType,
                 initializationData));
+          }
+        } else if (descriptorTag == TS_PMT_DESC_CDRM) {
+          if(descriptorLength > 1) {
+            encryptionMethod = (byte)(data.readUnsignedByte() & 0x0f);
           }
         }
         // Skip unused bytes of current descriptor.

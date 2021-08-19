@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed Add sm4 support
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.drm;
 
@@ -461,7 +464,11 @@ public class DefaultDrmSessionManager<T extends ExoMediaCrypto> implements DrmSe
       return true;
     } else if (C.CENC_TYPE_cbc1.equals(schemeType)
         || C.CENC_TYPE_cbcs.equals(schemeType)
-        || C.CENC_TYPE_cens.equals(schemeType)) {
+        || C.CENC_TYPE_cens.equals(schemeType)
+        // Begin add for sm4
+        || C.CENC_TYPE_sm4c.equals(schemeType)
+        || C.CENC_TYPE_sm4s.equals(schemeType)) {
+        // End add for sm4
       // API support for AES-CBC and pattern encryption was added in API 24. However, the
       // implementation was not stable until API 25.
       return Util.SDK_INT >= 25;

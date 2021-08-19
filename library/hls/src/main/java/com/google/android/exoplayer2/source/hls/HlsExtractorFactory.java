@@ -12,12 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed add params drmInitData in createExtractor()
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.source.hls;
 
 import android.net.Uri;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.extractor.Extractor;
 import com.google.android.exoplayer2.extractor.ExtractorInput;
 import com.google.android.exoplayer2.extractor.PositionHolder;
@@ -85,6 +89,7 @@ public interface HlsExtractorFactory {
       Uri uri,
       Format format,
       @Nullable List<Format> muxedCaptionFormats,
+      DrmInitData drmInitData,
       TimestampAdjuster timestampAdjuster,
       Map<String, List<String>> responseHeaders,
       ExtractorInput sniffingExtractorInput)

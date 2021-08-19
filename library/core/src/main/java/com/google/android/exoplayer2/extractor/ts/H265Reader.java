@@ -12,11 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed Add for WisePlayDrm
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.extractor.ts;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.extractor.ExtractorOutput;
 import com.google.android.exoplayer2.extractor.TrackOutput;
 import com.google.android.exoplayer2.extractor.ts.TsPayloadReader.TrackIdGenerator;
@@ -25,7 +29,10 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.NalUnitUtil;
 import com.google.android.exoplayer2.util.ParsableByteArray;
 import com.google.android.exoplayer2.util.ParsableNalUnitBitArray;
+
+import java.nio.ByteBuffer;
 import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Parses a continuous H.265 byte stream and extracts individual frames.
@@ -68,10 +75,14 @@ public final class H265Reader implements ElementaryStreamReader {
   // Scratch variables to avoid allocations.
   private final ParsableByteArray seiWrapper;
 
+  private int bytesSinceLastSleep = 0;
+  private DrmInitData drmInitData = null;
+  private byte encryptionMethod = 0;
+
   /**
    * @param seiReader An SEI reader for consuming closed caption channels.
    */
-  public H265Reader(SeiReader seiReader) {
+  public H265Reader(SeiReader seiReader, DrmInitData drmInitData, byte encryptionMethod) {
     this.seiReader = seiReader;
     prefixFlags = new boolean[3];
     vps = new NalUnitTargetBuffer(VPS_NUT, 128);
@@ -80,6 +91,8 @@ public final class H265Reader implements ElementaryStreamReader {
     prefixSei = new NalUnitTargetBuffer(PREFIX_SEI_NUT, 128);
     suffixSei = new NalUnitTargetBuffer(SUFFIX_SEI_NUT, 128);
     seiWrapper = new ParsableByteArray();
+    this.drmInitData = drmInitData;
+    this.encryptionMethod = encryptionMethod;
   }
 
   @Override
@@ -99,7 +112,7 @@ public final class H265Reader implements ElementaryStreamReader {
     idGenerator.generateNewId();
     formatId = idGenerator.getFormatId();
     output = extractorOutput.track(idGenerator.getTrackId(), C.TRACK_TYPE_VIDEO);
-    sampleReader = new SampleReader(output);
+    sampleReader = new SampleReader(output, drmInitData, encryptionMethod);
     seiReader.createTracks(extractorOutput, idGenerator);
   }
 
@@ -146,7 +159,7 @@ public final class H265Reader implements ElementaryStreamReader {
         // is negative then we wrote too many bytes to the NAL buffers. Discard the excess bytes
         // when notifying that the unit has ended.
         endNalUnit(absolutePosition, bytesWrittenPastPosition,
-            lengthToNalUnit < 0 ? -lengthToNalUnit : 0, pesTimeUs);
+                lengthToNalUnit < 0 ? -lengthToNalUnit : 0, pesTimeUs);
         // Indicate the start of the next NAL unit.
         startNalUnit(absolutePosition, bytesWrittenPastPosition, nalUnitType, pesTimeUs);
         // Continue scanning the data.
@@ -192,7 +205,7 @@ public final class H265Reader implements ElementaryStreamReader {
       sps.endNalUnit(discardPadding);
       pps.endNalUnit(discardPadding);
       if (vps.isCompleted() && sps.isCompleted() && pps.isCompleted()) {
-        output.format(parseMediaFormat(formatId, vps, sps, pps));
+        output.format(parseMediaFormat(formatId, vps, sps, pps, drmInitData));
         hasOutputFormat = true;
       }
     }
@@ -211,11 +224,12 @@ public final class H265Reader implements ElementaryStreamReader {
       // Skip the NAL prefix and type.
       seiWrapper.skipBytes(5);
       seiReader.consume(pesTimeUs, seiWrapper);
+      sampleReader.setSei(prefixSei.nalData, prefixSei.nalLength);
     }
   }
 
   private static Format parseMediaFormat(String formatId, NalUnitTargetBuffer vps,
-      NalUnitTargetBuffer sps, NalUnitTargetBuffer pps) {
+                                         NalUnitTargetBuffer sps, NalUnitTargetBuffer pps, DrmInitData drmInitData) {
     // Build codec-specific data.
     byte[] csd = new byte[vps.nalLength + sps.nalLength + pps.nalLength];
     System.arraycopy(vps.nalData, 0, csd, 0, vps.nalLength);
@@ -321,8 +335,8 @@ public final class H265Reader implements ElementaryStreamReader {
     }
 
     return Format.createVideoSampleFormat(formatId, MimeTypes.VIDEO_H265, null, Format.NO_VALUE,
-        Format.NO_VALUE, picWidthInLumaSamples, picHeightInLumaSamples, Format.NO_VALUE,
-        Collections.singletonList(csd), Format.NO_VALUE, pixelWidthHeightRatio, null);
+            Format.NO_VALUE, picWidthInLumaSamples, picHeightInLumaSamples, Format.NO_VALUE,
+            Collections.singletonList(csd), Format.NO_VALUE, pixelWidthHeightRatio, drmInitData);
   }
 
   /**
@@ -415,8 +429,21 @@ public final class H265Reader implements ElementaryStreamReader {
     private long sampleTimeUs;
     private boolean sampleIsKeyframe;
 
-    public SampleReader(TrackOutput output) {
+    //For ChinaDRM, keyId and iv is in sei buffer.
+    private byte[] keyIdAndIv;
+    private DrmInitData drmInitData = null;
+    private byte encryptionMethod;
+
+    //    private long sampleNalType;
+    private static final byte[] USER_DATA_UNREGISTERED_UUID = {
+            (byte)0x70, (byte)0xc1, (byte)0xdb, (byte)0x9f, (byte)0x66, (byte)0xae, (byte)0x41, (byte)0x27,
+            (byte)0xbf, (byte)0xc0, (byte)0xbb, (byte)0x19, (byte)0x81, (byte)0x69, (byte)0x4b, (byte)0x66
+    };
+
+    public SampleReader(TrackOutput output, DrmInitData drmInitData, byte encryptionMethod) {
       this.output = output;
+      this.drmInitData = drmInitData;
+      this.encryptionMethod = encryptionMethod;
     }
 
     public void reset() {
@@ -483,12 +510,132 @@ public final class H265Reader implements ElementaryStreamReader {
       }
     }
 
+    public void setSei(byte[] seiBuffer, int bufferLength) {
+      int cei_pos = 0;
+      int key_data_len = bufferLength;
+      int cei_found = 0;
+      byte[] key_data = seiBuffer;
+      byte next_key_id_flag;
+      byte encryptionFlag;
+      byte g_encryption_flag = 0;
+      byte[] g_current_key_id;
+      byte[] g_iv;
+      for(; (cei_pos + 16 < key_data_len) && (cei_found != 1); cei_pos++) {
+        for(int i = 0 ; i < 16; i++) {
+          if(key_data[cei_pos + i] != USER_DATA_UNREGISTERED_UUID[i]) {
+            break;
+          }
+          if(i == 15) {
+            cei_found = 1;
+            cei_pos += 16;
+            break;
+          }
+        }
+        if(cei_found == 1) {
+          break;
+        }
+      }
+      if(cei_found == 0) {
+        g_current_key_id = null;
+        g_iv = null;
+        keyIdAndIv = null;
+        return ;
+      }
+      g_encryption_flag = (byte)((key_data[cei_pos] & 0x80) >> 7);
+      next_key_id_flag = (byte)((key_data[cei_pos] & 0x40) >> 6);
+      //skip encryption flags
+      cei_pos += 1;
+      if(g_encryption_flag != 0) {
+        if(keyIdAndIv == null) {
+          keyIdAndIv = new byte[32];
+        }
+        System.arraycopy(key_data, cei_pos, keyIdAndIv, 0,16);
+        cei_pos += 16;
+      }
+      if(next_key_id_flag == 1) {
+        cei_pos += 16;
+      }
+      byte cei_iv_len = key_data[cei_pos];
+      cei_pos += 1;
+      if(cei_iv_len == 16) {
+        if(keyIdAndIv == null) {
+          keyIdAndIv = new byte[32];
+        }
+        System.arraycopy(key_data, cei_pos, keyIdAndIv, 16,16);
+      } else {
+        //invalid iv length
+      }
+    }
+
+    private static byte[] asBytes(UUID uuid) {
+      ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+      bb.putLong(uuid.getMostSignificantBits());
+      bb.putLong(uuid.getLeastSignificantBits());
+      return bb.array();
+    }
+
+    public static String toHexString(byte[] byteArray) {
+      final StringBuilder hexString = new StringBuilder("");
+      if (byteArray == null || byteArray.length <= 0)
+        return null;
+      for (int i = 0; i < byteArray.length; i++) {
+        int v = byteArray[i] & 0xFF;
+        String hv = Integer.toHexString(v);
+        if (hv.length() < 2) {
+          hexString.append(0);
+        }
+        hexString.append(hv);
+      }
+      return hexString.toString().toLowerCase();
+    }
+
     private void outputSample(int offset) {
       @C.BufferFlags int flags = sampleIsKeyframe ? C.BUFFER_FLAG_KEY_FRAME : 0;
       int size = (int) (nalUnitStartPosition - samplePosition);
-      output.sampleMetadata(sampleTimeUs, flags, size, offset, null);
+      TrackOutput.CryptoData cryptoData = null;
+      if (drmInitData != null
+              && drmInitData.schemeDataCount > 0
+              && drmInitData.get(0).matches(C.WISEPLAY_UUID)) {
+        flags |= C.BUFFER_FLAG_ENCRYPTED;
+        //clear file to enable drm
+//          if(keyIdAndIv == null) {
+//            keyIdAndIv = new byte[32];
+//            for(int i =0; i < 32; i++) {
+//              keyIdAndIv[i] = (byte) i;
+//            }
+//          }
+
+        if (keyIdAndIv == null) {
+          cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_UNENCRYPTED, null, 0, 0);
+        } else {
+          byte[] keyInfo = new byte[16 + keyIdAndIv.length + 4 + 4];
+          System.arraycopy(asBytes(C.WISEPLAY_UUID), 0, keyInfo, 0, 16);
+          System.arraycopy(keyIdAndIv, 0, keyInfo, 16, keyIdAndIv.length);
+          int clearBytes = size;
+          int encryptedBytes = 0;
+
+          keyInfo[16 + keyIdAndIv.length] = (byte) ((clearBytes >> 24) & 0xFF);
+          keyInfo[16 + keyIdAndIv.length + 1] = (byte) ((clearBytes >> 16) & 0xFF);
+          keyInfo[16 + keyIdAndIv.length + 2] = (byte) ((clearBytes >> 8) & 0xFF);
+          keyInfo[16 + keyIdAndIv.length + 3] = (byte) (clearBytes & 0xFF);
+
+          keyInfo[16 + keyIdAndIv.length + 4] = (byte) ((encryptedBytes >> 24) & 0xFF);
+          keyInfo[16 + keyIdAndIv.length + 5] = (byte) ((encryptedBytes >> 16) & 0xFF);
+          keyInfo[16 + keyIdAndIv.length + 6] = (byte) ((encryptedBytes >> 8) & 0xFF);
+          keyInfo[16 + keyIdAndIv.length + 7] = (byte) (encryptedBytes & 0xFF);
+
+          if(encryptionMethod == 0x2) {
+            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_AES_CBC, keyInfo, 1, 9);
+          } else if(encryptionMethod == 0x5){
+            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_AES_CBC, keyInfo, 0, 0);
+          }else if(encryptionMethod == 0x0){
+            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_UNENCRYPTED, keyInfo, 0, 0);
+          }
+//          cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_UNENCRYPTED, keyInfo, 0, 0);
+//          Log.e(TAG, "iv:"+ toHexString(keyIdAndIv));
+        }
+      }
+      output.sampleMetadata(sampleTimeUs, flags, size, offset, cryptoData);
     }
-
   }
-
 }

@@ -1,16 +1,5 @@
 [
   {
-    "name": "Test Sample",
-    "samples": [
-      {
-        "name": "wiseplay dash cenc",
-        "uri": "https://wiseplay.hwcloudtest.cn:9091/rem/LaunchEvent/h265_480x270_0.2m_30fp_cenc/dash.mpd",
-        "drm_scheme": "wiseplay",
-        "drm_license_url": "https://wiseplay.hwcloudtest.cn:9091/playdemo/chinaDrm/getLicense?contentId=sfasRAeuyHJFSJA&useDrmProxy=1"
-      }
-    ]
-  },
-  {
     "name": "Widevine HDCP Capabilities Tests",
     "samples": [
       {

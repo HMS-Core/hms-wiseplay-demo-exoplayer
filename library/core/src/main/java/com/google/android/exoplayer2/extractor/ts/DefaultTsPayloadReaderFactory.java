@@ -12,12 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed Add for WisePlayDrm
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.extractor.ts;
 
 import android.util.SparseArray;
 import androidx.annotation.IntDef;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.extractor.ts.TsPayloadReader.EsInfo;
 import com.google.android.exoplayer2.text.cea.Cea708InitializationData;
 import com.google.android.exoplayer2.util.MimeTypes;
@@ -44,16 +48,16 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
   @Documented
   @Retention(RetentionPolicy.SOURCE)
   @IntDef(
-      flag = true,
-      value = {
-        FLAG_ALLOW_NON_IDR_KEYFRAMES,
-        FLAG_IGNORE_AAC_STREAM,
-        FLAG_IGNORE_H264_STREAM,
-        FLAG_DETECT_ACCESS_UNITS,
-        FLAG_IGNORE_SPLICE_INFO_STREAM,
-        FLAG_OVERRIDE_CAPTION_DESCRIPTORS,
-        FLAG_ENABLE_HDMV_DTS_AUDIO_STREAMS
-      })
+          flag = true,
+          value = {
+                  FLAG_ALLOW_NON_IDR_KEYFRAMES,
+                  FLAG_IGNORE_AAC_STREAM,
+                  FLAG_IGNORE_H264_STREAM,
+                  FLAG_DETECT_ACCESS_UNITS,
+                  FLAG_IGNORE_SPLICE_INFO_STREAM,
+                  FLAG_OVERRIDE_CAPTION_DESCRIPTORS,
+                  FLAG_ENABLE_HDMV_DTS_AUDIO_STREAMS
+          })
   public @interface Flags {}
 
   /**
@@ -109,9 +113,9 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
    */
   public DefaultTsPayloadReaderFactory(@Flags int flags) {
     this(
-        flags,
-        Collections.singletonList(
-            Format.createTextSampleFormat(null, MimeTypes.APPLICATION_CEA608, 0, null)));
+            flags,
+            Collections.singletonList(
+                    Format.createTextSampleFormat(null, MimeTypes.APPLICATION_CEA608, 0, null)));
   }
 
   /**
@@ -135,17 +139,21 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
   }
 
   @Override
-  public TsPayloadReader createPayloadReader(int streamType, EsInfo esInfo) {
+  public TsPayloadReader createPayloadReader(int streamType, EsInfo esInfo, DrmInitData drmInitData, byte encryptionMethod) {
+    if(streamType == 0xd2) {
+      streamType = TsExtractor.TS_STREAM_TYPE_H265;
+    }
+
     switch (streamType) {
       case TsExtractor.TS_STREAM_TYPE_MPA:
       case TsExtractor.TS_STREAM_TYPE_MPA_LSF:
         return new PesReader(new MpegAudioReader(esInfo.language));
       case TsExtractor.TS_STREAM_TYPE_AAC_ADTS:
         return isSet(FLAG_IGNORE_AAC_STREAM)
-            ? null : new PesReader(new AdtsReader(false, esInfo.language));
+                ? null : new PesReader(new AdtsReader(false, esInfo.language));
       case TsExtractor.TS_STREAM_TYPE_AAC_LATM:
         return isSet(FLAG_IGNORE_AAC_STREAM)
-            ? null : new PesReader(new LatmReader(esInfo.language));
+                ? null : new PesReader(new LatmReader(esInfo.language));
       case TsExtractor.TS_STREAM_TYPE_AC3:
       case TsExtractor.TS_STREAM_TYPE_E_AC3:
         return new PesReader(new Ac3Reader(esInfo.language));
@@ -162,18 +170,18 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
         return new PesReader(new H262Reader(buildUserDataReader(esInfo)));
       case TsExtractor.TS_STREAM_TYPE_H264:
         return isSet(FLAG_IGNORE_H264_STREAM) ? null
-            : new PesReader(new H264Reader(buildSeiReader(esInfo),
-                isSet(FLAG_ALLOW_NON_IDR_KEYFRAMES), isSet(FLAG_DETECT_ACCESS_UNITS)));
+                : new PesReader(new H264Reader(buildSeiReader(esInfo),
+                isSet(FLAG_ALLOW_NON_IDR_KEYFRAMES), isSet(FLAG_DETECT_ACCESS_UNITS), drmInitData, encryptionMethod));
       case TsExtractor.TS_STREAM_TYPE_H265:
-        return new PesReader(new H265Reader(buildSeiReader(esInfo)));
+        return new PesReader(new H265Reader(buildSeiReader(esInfo), drmInitData, encryptionMethod));
       case TsExtractor.TS_STREAM_TYPE_SPLICE_INFO:
         return isSet(FLAG_IGNORE_SPLICE_INFO_STREAM)
-            ? null : new SectionReader(new SpliceInfoSectionReader());
+                ? null : new SectionReader(new SpliceInfoSectionReader());
       case TsExtractor.TS_STREAM_TYPE_ID3:
         return new PesReader(new Id3Reader());
       case TsExtractor.TS_STREAM_TYPE_DVBSUBS:
         return new PesReader(
-            new DvbSubtitleReader(esInfo.dvbSubtitleInfos));
+                new DvbSubtitleReader(esInfo.dvbSubtitleInfos));
       default:
         return null;
     }
@@ -185,7 +193,7 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
    * {@link SeiReader} for the declared formats, or {@link #closedCaptionFormats} if the descriptor
    * is not present.
    *
-   * @param esInfo The {@link EsInfo} passed to {@link #createPayloadReader(int, EsInfo)}.
+   * @param esInfo The {@link EsInfo} passed to {@link #createPayloadReader(int, EsInfo, DrmInitData, byte)}.
    * @return A {@link SeiReader} for closed caption tracks.
    */
   private SeiReader buildSeiReader(EsInfo esInfo) {
@@ -198,7 +206,7 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
    * {@link UserDataReader} for the declared formats, or {@link #closedCaptionFormats} if the
    * descriptor is not present.
    *
-   * @param esInfo The {@link EsInfo} passed to {@link #createPayloadReader(int, EsInfo)}.
+   * @param esInfo The {@link EsInfo} passed to {@link #createPayloadReader(int, EsInfo, DrmInitData, byte)}.
    * @return A {@link UserDataReader} for closed caption tracks.
    */
   private UserDataReader buildUserDataReader(EsInfo esInfo) {
@@ -211,7 +219,7 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
    * List<Format>} for the declared formats, or {@link #closedCaptionFormats} if the descriptor is
    * not present.
    *
-   * @param esInfo The {@link EsInfo} passed to {@link #createPayloadReader(int, EsInfo)}.
+   * @param esInfo The {@link EsInfo} passed to {@link #createPayloadReader(int, EsInfo, DrmInitData, byte)}.
    * @return A {@link List<Format>} containing list of closed caption formats.
    */
   private List<Format> getClosedCaptionFormats(EsInfo esInfo) {
@@ -255,17 +263,17 @@ public final class DefaultTsPayloadReaderFactory implements TsPayloadReader.Fact
           }
 
           closedCaptionFormats.add(
-              Format.createTextSampleFormat(
-                  /* id= */ null,
-                  mimeType,
-                  /* codecs= */ null,
-                  /* bitrate= */ Format.NO_VALUE,
-                  /* selectionFlags= */ 0,
-                  language,
-                  accessibilityChannel,
-                  /* drmInitData= */ null,
-                  Format.OFFSET_SAMPLE_RELATIVE,
-                  initializationData));
+                  Format.createTextSampleFormat(
+                          /* id= */ null,
+                          mimeType,
+                          /* codecs= */ null,
+                          /* bitrate= */ Format.NO_VALUE,
+                          /* selectionFlags= */ 0,
+                          language,
+                          accessibilityChannel,
+                          /* drmInitData= */ null,
+                          Format.OFFSET_SAMPLE_RELATIVE,
+                          initializationData));
         }
       } else {
         // Unknown descriptor. Ignore.

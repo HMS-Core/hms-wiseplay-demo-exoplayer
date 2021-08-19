@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed add params drmInitData in createExtractor()
+ *            Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.source.hls;
 
@@ -401,6 +404,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
               dataSpec.uri,
               trackFormat,
               muxedCaptionFormats,
+              drmInitData,
               timestampAdjuster,
               dataSource.getResponseHeaders(),
               extractorInput);

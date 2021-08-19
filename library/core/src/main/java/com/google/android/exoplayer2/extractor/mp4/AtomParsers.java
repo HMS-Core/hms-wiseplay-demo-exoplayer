@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2021.8.9-Changed Add sm4 support
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
  */
 package com.google.android.exoplayer2.extractor.mp4;
 
@@ -1316,7 +1319,10 @@ import java.util.List;
     }
 
     if (C.CENC_TYPE_cenc.equals(schemeType) || C.CENC_TYPE_cbc1.equals(schemeType)
-        || C.CENC_TYPE_cens.equals(schemeType) || C.CENC_TYPE_cbcs.equals(schemeType)) {
+        || C.CENC_TYPE_cens.equals(schemeType) || C.CENC_TYPE_cbcs.equals(schemeType)
+        // Begin add for sm4
+        || C.CENC_TYPE_sm4c.equals(schemeType) || C.CENC_TYPE_sm4s.equals(schemeType)) {
+        // End add for sm4
       Assertions.checkArgument(dataFormat != null, "frma atom is mandatory");
       Assertions.checkArgument(schemeInformationBoxPosition != C.POSITION_UNSET,
           "schi atom is mandatory");

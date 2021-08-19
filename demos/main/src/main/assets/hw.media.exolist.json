@@ -1,0 +1,362 @@
+[
+  {
+    "name": "WisePlay DASH: H265,HW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_DASH_H265_4.2M_30fps_1080P/dash.mpd"
+      },
+      {
+        "name": "WisePlay: cenc-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_DASH_H265_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cens-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_DASH_H265_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbc1-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_DASH_H265_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbcs-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_DASH_H265_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4c-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_DASH_H265_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4s-DASH-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_DASH_H265_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay DASH: H264,HW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_DASH_H264_4.2M_30fps_1080P/dash.mpd"
+      },
+      {
+        "name": "WisePlay: cenc-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_DASH_H264_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cens-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_DASH_H264_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbc1-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_DASH_H264_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbcs-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_DASH_H264_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4c-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_DASH_H264_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4s-DASH-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_DASH_H264_4.2M_30fps_1080P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay DASH: H265,SW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_DASH_H265_1.4M_30fps_720P/dash.mpd"
+      },
+      {
+        "name": "WisePlay: cenc-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_DASH_H265_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cens-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_DASH_H265_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbc1-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_DASH_H265_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbcs-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_DASH_H265_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4c-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_DASH_H265_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4s-DASH-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_DASH_H265_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay DASH: H264,SW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_DASH_H264_1.4M_30fps_720P/dash.mpd"
+      },
+      {
+        "name": "WisePlay: cenc-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_DASH_H264_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cens-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_DASH_H264_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbc1-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_DASH_H264_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbcs-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_DASH_H264_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4c-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_DASH_H264_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4s-DASH-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_DASH_H264_1.4M_30fps_720P/dash.mpd",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay HLS: H265,HW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_HLS_H265_4.2M_30fps_1080P/hls.m3u8"
+      },
+      {
+        "name": "WisePlay: cenc-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_HLS_H265_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cens-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_HLS_H265_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbc1-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_HLS_H265_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbcs-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_HLS_H265_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4c-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_HLS_H265_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4s-HLS-H265-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_HLS_H265_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay HLS: H264,HW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_HLS_H264_4.2M_30fps_1080P/hls.m3u8"
+      },
+      {
+        "name": "WisePlay: cenc-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_HLS_H264_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cens-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_HLS_H264_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbc1-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_HLS_H264_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: cbcs-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_HLS_H264_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4c-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_HLS_H264_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      },
+      {
+        "name": "WisePlay: sm4s-HLS-H264-4.2M-30fps-1080P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_HLS_H264_4.2M_30fps_1080P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJA"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay HLS: H265,SW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_HLS_H265_1.4M_30fps_720P/hls.m3u8"
+      },
+      {
+        "name": "WisePlay: cenc-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_HLS_H265_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cens-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_HLS_H265_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbc1-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_HLS_H265_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbcs-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_HLS_H265_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4c-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_HLS_H265_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4s-HLS-H265-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_HLS_H265_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      }
+    ]
+  },
+  {
+    "name": "WisePlay HLS: H264,SW",
+    "samples": [
+      {
+        "name": "WisePlay: clear-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/clear_HLS_H264_1.4M_30fps_720P/hls.m3u8"
+      },
+      {
+        "name": "WisePlay: cenc-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cenc_HLS_H264_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cens-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cens_HLS_H264_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbc1-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbc1_HLS_H264_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: cbcs-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/cbcs_HLS_H264_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4c-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4c_HLS_H264_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      },
+      {
+        "name": "WisePlay: sm4s-HLS-H264-1.4M-30fps-720P",
+        "uri": "https://drmkit.hwcloudtest.cn:8082/wpmedia/LaunchEvent/sm4s_HLS_H264_1.4M_30fps_720P/hls.m3u8",
+        "drm_scheme": "wiseplay",
+        "drm_license_url": "https://drmkit.hwcloudtest.cn:8082/playserverdemo/wiseplay/v3/getLicense?contentId=sfasRAeuyHJFSJB"
+      }
+    ]
+  }
+]

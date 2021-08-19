@@ -10,3 +10,5 @@
 /library/hls/buildout/
 /library/smoothstreaming/buildout/
 /library/ui/buildout/
+/local.properties
+/gradle/wrapper/gradle-wrapper.jar

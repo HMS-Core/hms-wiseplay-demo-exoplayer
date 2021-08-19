@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * 2021.8.9-Changed add sm4 support
+ *          Huawei Technologies Co., Ltd. <wangjian383@huawei.com>
+ *
  * Modification is made for supporting WisePlay DRM at 2020.5
  */
 package com.google.android.exoplayer2;
@@ -729,6 +732,14 @@ public final class C {
   /** "cbcs" scheme type name as defined in ISO/IEC 23001-7:2016. */
   @SuppressWarnings("ConstantField")
   public static final String CENC_TYPE_cbcs = "cbcs";
+
+  // Begin add for sm4
+  /** "sm4c" scheme type name as defined in ISO/IEC 23001-7:2016. */
+  public static final String CENC_TYPE_sm4c = "sm4c";
+
+  /** "sm4s" scheme type name as defined in ISO/IEC 23001-7:2016. */
+  public static final String CENC_TYPE_sm4s = "sm4s";
+  // End add for sm4
 
   /**
    * The Nil UUID as defined by

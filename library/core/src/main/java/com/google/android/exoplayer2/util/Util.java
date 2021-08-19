@@ -1537,6 +1537,7 @@ public final class Util {
         return C.CLEARKEY_UUID;
       // Begin add for WisePlay
       case "wiseplay":
+      case "chinadrm":
         return C.WISEPLAY_UUID;
       // End add for WisePlay
       default:
