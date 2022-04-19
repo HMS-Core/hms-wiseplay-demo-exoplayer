@@ -29,6 +29,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.UUID;
 
 /** A queue of media sample data. */
 /* package */ class SampleDataQueue {
@@ -120,7 +121,13 @@ import java.util.Arrays;
   public void readToBuffer(DecoderInputBuffer buffer, SampleExtrasHolder extrasHolder) {
     // Read encryption data if the sample is encrypted.
     if (buffer.isEncrypted()) {
-      readEncryptionData(buffer, extrasHolder);
+      // add support chinaDrm
+      CryptoData cryptoData = extrasHolder.cryptoData;
+      if (cryptoData != null && cryptoData.encryptionKey != null && cryptoData.encryptionKey.length == 56) {
+        readChinaDrmEncryptionData(buffer, extrasHolder);
+      } else {
+        readEncryptionData(buffer, extrasHolder);
+      }
     }
     // Read sample data, extracting supplemental data into a separate buffer if needed.
     if (buffer.hasSupplementalData()) {
@@ -145,6 +152,58 @@ import java.util.Arrays;
       buffer.ensureSpaceForWrite(extrasHolder.size);
       readData(extrasHolder.offset, buffer.data, extrasHolder.size);
     }
+  }
+
+  /**
+   * put chinaDrm crypto data into buffer
+   *
+   * @param buffer The buffer into which the encryption data should be written.
+   * @param extrasHolder The extras holder whose offset should be read and subsequently adjusted.
+   */
+  private static void readChinaDrmEncryptionData(DecoderInputBuffer buffer,
+                                                 SampleExtrasHolder extrasHolder) {
+    CryptoData cryptoData = extrasHolder.cryptoData;
+    if (cryptoData != null) {
+      // uuid, keyid, iv
+      byte[] bu = new byte[16];
+      System.arraycopy(cryptoData.encryptionKey, 0, bu, 0, 16);
+      UUID uuid = asUuid(bu);
+      if(uuid.compareTo(C.WISEPLAY_UUID) == 0) {
+        byte[] keyId = new byte[16];
+        System.arraycopy(cryptoData.encryptionKey, 16, keyId, 0, 16);
+        if (buffer.cryptoInfo.iv == null) {
+          buffer.cryptoInfo.iv = new byte[16];
+        }
+        System.arraycopy(cryptoData.encryptionKey, 32, buffer.cryptoInfo.iv, 0, 16);
+        int numSubSamples = 1;
+        int[] numBytesOfClearData = new int[numSubSamples];
+        int[] numBytesOfEncryptedData = new int[numSubSamples];
+        numBytesOfClearData[0] = cryptoData.encryptionKey[48 + 3] & 0xFF |
+                (cryptoData.encryptionKey[48 + 2] & 0xFF) << 8 |
+                (cryptoData.encryptionKey[48 + 1] & 0xFF) << 16 |
+                (cryptoData.encryptionKey[48] & 0xFF) << 24;
+        numBytesOfEncryptedData[0] = cryptoData.encryptionKey[48 + 4 + 3] & 0xFF |
+                (cryptoData.encryptionKey[48 + 4 + 2] & 0xFF) << 8 |
+                (cryptoData.encryptionKey[48 + 4 + 1] & 0xFF) << 16 |
+                (cryptoData.encryptionKey[48 + 4 ] & 0xFF) << 24;
+        buffer.cryptoInfo.set(1, numBytesOfClearData, numBytesOfEncryptedData,
+                keyId, buffer.cryptoInfo.iv, cryptoData.cryptoMode,
+                cryptoData.encryptedBlocks, cryptoData.clearBlocks);
+      }
+    }
+  }
+
+  /**
+   * Convert byte array into uuid
+   *
+   * @param bytes data
+   * @return uuid
+   */
+  private static UUID asUuid(byte[] bytes) {
+    ByteBuffer bb = ByteBuffer.wrap(bytes);
+    long firstLong = bb.getLong();
+    long secondLong = bb.getLong();
+    return new UUID(firstLong, secondLong);
   }
 
   /**

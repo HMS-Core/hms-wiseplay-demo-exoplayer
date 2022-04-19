@@ -216,6 +216,7 @@ public final class H265Reader implements ElementaryStreamReader {
       // Skip the NAL prefix and type.
       seiWrapper.skipBytes(5);
       seiReader.consume(pesTimeUs, seiWrapper);
+      sampleReader.setSei(prefixSei.nalData, prefixSei.nalLength);
     }
     if (suffixSei.endNalUnit(discardPadding)) {
       int unescapedLength = NalUnitUtil.unescapeStream(suffixSei.nalData, suffixSei.nalLength);
@@ -224,7 +225,6 @@ public final class H265Reader implements ElementaryStreamReader {
       // Skip the NAL prefix and type.
       seiWrapper.skipBytes(5);
       seiReader.consume(pesTimeUs, seiWrapper);
-      sampleReader.setSei(prefixSei.nalData, prefixSei.nalLength);
     }
   }
 
@@ -467,7 +467,7 @@ public final class H265Reader implements ElementaryStreamReader {
           outputSample(offset);
           readingSample = false;
         }
-        if (nalUnitType <= PPS_NUT) {
+        if (nalUnitType == PPS_NUT) {
           // This sample will have parameter sets at the start.
           isFirstParameterSet = !writingParameterSets;
           writingParameterSets = true;
@@ -538,7 +538,6 @@ public final class H265Reader implements ElementaryStreamReader {
       if(cei_found == 0) {
         g_current_key_id = null;
         g_iv = null;
-        keyIdAndIv = null;
         return ;
       }
       g_encryption_flag = (byte)((key_data[cei_pos] & 0x80) >> 7);
@@ -624,15 +623,19 @@ public final class H265Reader implements ElementaryStreamReader {
           keyInfo[16 + keyIdAndIv.length + 6] = (byte) ((encryptedBytes >> 8) & 0xFF);
           keyInfo[16 + keyIdAndIv.length + 7] = (byte) (encryptedBytes & 0xFF);
 
-          if(encryptionMethod == 0x2) {
-            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_AES_CBC, keyInfo, 1, 9);
-          } else if(encryptionMethod == 0x5){
-            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_AES_CBC, keyInfo, 0, 0);
-          }else if(encryptionMethod == 0x0){
+          // encryptionMethod表示该码流中视频内容加密的方式
+          // 0x0:NONE
+          // 0x1:SM4-SAMPL
+          // 0x2:CBCS
+          // 0x3:SM4-CBC
+          // 0x5:AES-CBC
+          if(encryptionMethod == 0x1 || encryptionMethod == 0x2) {
+            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_AES_CBC, keyInfo, 3, 9);
+          } else if(encryptionMethod == 0x5 || encryptionMethod == 0x3) {
+            cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_AES_CBC, keyInfo, 2, 0);
+          } else if(encryptionMethod == 0x0) {
             cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_UNENCRYPTED, keyInfo, 0, 0);
           }
-//          cryptoData = new TrackOutput.CryptoData(C.CRYPTO_MODE_UNENCRYPTED, keyInfo, 0, 0);
-//          Log.e(TAG, "iv:"+ toHexString(keyIdAndIv));
         }
       }
       output.sampleMetadata(sampleTimeUs, flags, size, offset, cryptoData);

@@ -1,6 +1,9 @@
-# 基于ExoPlayer的WisePlay DRM Demo #
+# WisePlay DRM Demo Based On ExoPlayer #
 
-中文 | [English](README.md)
+
+![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
+
+中文 | [English](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md)
 
 ## 目录
 

@@ -41,7 +41,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -104,9 +103,11 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
   private static final String KEYFORMAT_PLAYREADY = "com.microsoft.playready";
   // chinaDRM supoprt
   private static final String KEYFORMAT_CHINADRMV2 = "ChinaDRM V2.0";
+  private static final String KEYFORMAT_WISEPLAYDRM_PSSH_BINARY =
+          "urn:uuid:3d5e6d35-9b9a-41e8-b843-dd3c6e72c42c";
   private static final String KEYFORMAT_IDENTITY = "identity";
   private static final String KEYFORMAT_WIDEVINE_PSSH_BINARY =
-      "urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed";
+          "urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed";
   private static final String KEYFORMAT_WIDEVINE_PSSH_JSON = "com.widevine";
 
   private static final String BOOLEAN_TRUE = "YES";
@@ -725,14 +726,7 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
             if (encryptionScheme == null) {
               encryptionScheme = parseEncryptionScheme(method);
             }
-            SchemeData schemeData;
-            if (KEYFORMAT_PLAYREADY.equals(keyFormat)) {
-              schemeData = parsePlayReadySchemeData(line, variableDefinitions);
-            } else if(keyFormat.indexOf(KEYFORMAT_CHINADRMV2) == 0) {
-              schemeData = parseChinaDRMSchemeData(line, keyFormat, variableDefinitions);
-            } else {
-              schemeData = parseWidevineSchemeData(line, keyFormat, variableDefinitions);
-            }
+            SchemeData schemeData = parseDrmSchemeData(line, keyFormat, variableDefinitions);
             if (schemeData != null) {
               cachedDrmInitData = null;
               currentSchemeDatas.put(keyFormat, schemeData);
@@ -890,60 +884,15 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
       byte[] data = Base64.decode(uriString.substring(uriString.indexOf(',')), Base64.DEFAULT);
       byte[] psshData = PsshAtomUtil.buildPsshAtom(C.PLAYREADY_UUID, data);
       return new SchemeData(C.PLAYREADY_UUID, MimeTypes.VIDEO_MP4, psshData);
-    } else if(keyFormat.indexOf(KEYFORMAT_CHINADRMV2) == 0) {
-      // chinadrm support
+    } else if (keyFormat.indexOf(KEYFORMAT_CHINADRMV2) == 0 || KEYFORMAT_WISEPLAYDRM_PSSH_BINARY.equals(keyFormat)) {
+      // add chinaDrm support
       String uriString = parseStringAttr(line, REGEX_URI, variableDefinitions);
       return new SchemeData(
               C.WISEPLAY_UUID,
               MimeTypes.VIDEO_MP4,
-              Base64.decode(uriString.substring(uriString.indexOf(',')), Base64.DEFAULT));
+              Base64.decode(uriString.substring(uriString.indexOf(',') + 1), Base64.DEFAULT));
     }
     return null;
-  }
-
-  private static @Nullable SchemeData parsePlayReadySchemeData(
-          String line, Map<String, String> variableDefinitions) throws ParserException {
-    String keyFormatVersions =
-            parseOptionalStringAttr(line, REGEX_KEYFORMATVERSIONS, "1", variableDefinitions);
-    if (!"1".equals(keyFormatVersions)) {
-      // Not supported.
-      return null;
-    }
-    String uriString = parseStringAttr(line, REGEX_URI, variableDefinitions);
-    byte[] data = Base64.decode(uriString.substring(uriString.indexOf(',')), Base64.DEFAULT);
-    byte[] psshData = PsshAtomUtil.buildPsshAtom(C.PLAYREADY_UUID, data);
-    return new SchemeData(C.PLAYREADY_UUID, MimeTypes.VIDEO_MP4, psshData);
-  }
-
-  private static @Nullable SchemeData parseWidevineSchemeData(
-          String line, String keyFormat, Map<String, String> variableDefinitions)
-          throws ParserException {
-    if (KEYFORMAT_WIDEVINE_PSSH_BINARY.equals(keyFormat)) {
-      String uriString = parseStringAttr(line, REGEX_URI, variableDefinitions);
-      return new SchemeData(
-              C.WIDEVINE_UUID,
-              MimeTypes.VIDEO_MP4,
-              Base64.decode(uriString.substring(uriString.indexOf(',')), Base64.DEFAULT));
-    }
-    if (KEYFORMAT_WIDEVINE_PSSH_JSON.equals(keyFormat)) {
-      try {
-        return new SchemeData(C.WIDEVINE_UUID, "hls", line.getBytes(C.UTF8_NAME));
-      } catch (UnsupportedEncodingException e) {
-        throw new ParserException(e);
-      }
-    }
-    return null;
-  }
-
-  // chinadrm support
-  private static @Nullable SchemeData parseChinaDRMSchemeData(
-          String line, String keyFormat, Map<String, String> variableDefinitions)
-          throws ParserException {
-    try {
-      return new SchemeData(C.WISEPLAY_UUID, "hls", line.getBytes(C.UTF8_NAME));
-    } catch (UnsupportedEncodingException e) {
-      throw new ParserException(e);
-    }
   }
 
   private static String parseEncryptionScheme(String method) {
