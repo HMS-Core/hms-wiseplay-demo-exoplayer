@@ -18,6 +18,9 @@ package com.google.android.exoplayer2.drm;
 import android.media.MediaDrm;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+
+import com.huawei.wiseplaydrmsdk.common.DrmCryptoInfo;
+
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -141,4 +144,19 @@ public interface DrmSession<T extends ExoMediaCrypto> {
    * released, and the instance cannot be re-used.
    */
   void release();
+
+  default boolean isUseWisePlayDrmSDK() {
+    return false;
+  }
+
+  /**
+   * drmsdk解密数据，解密发生异常情况返回null
+   *
+   * @param cryptoInfo 解密信息
+   * @param srcPtr 加密数据
+   * @return 解密后的数据
+   */
+  default @Nullable byte[] decryptData(DrmCryptoInfo cryptoInfo, byte[] srcPtr) {
+    return null;
+  }
 }

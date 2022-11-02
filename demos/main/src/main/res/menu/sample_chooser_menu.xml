@@ -27,4 +27,9 @@
       android:title="@string/tunneling"
       android:checkable="true"
       app:showAsAction="never"/>
+
+  <item android:id="@+id/use_wiseplaydrm"
+      android:title="@string/use_wiseplaydrm"
+      android:checkable="true"
+      app:showAsAction="never"/>
 </menu>

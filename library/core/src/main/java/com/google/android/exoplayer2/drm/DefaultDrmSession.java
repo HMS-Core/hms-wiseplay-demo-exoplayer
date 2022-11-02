@@ -17,6 +17,7 @@ package com.google.android.exoplayer2.drm;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.media.MediaCodec;
 import android.media.NotProvisionedException;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -34,6 +35,8 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.EventDispatcher;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
+import com.huawei.wiseplaydrmsdk.common.DrmCryptoInfo;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,6 +62,13 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
   /** Manages provisioning requests. */
   public interface ProvisioningManager<T extends ExoMediaCrypto> {
+
+    /**
+     * 在下载完证书，且openSession成功时回调
+     *
+     * @param session this session
+     */
+    void provisionOpenSessionSuccess(DefaultDrmSession session);
 
     /**
      * Called when a session requires provisioning. The manager <em>may</em> call {@link
@@ -216,7 +226,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
   public void onProvisionCompleted() {
     if (openInternal(false)) {
-      doLicense(true);
+      doLicense(true, false);
     }
   }
 
@@ -268,7 +278,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       requestHandlerThread.start();
       requestHandler = new RequestHandler(requestHandlerThread.getLooper());
       if (openInternal(true)) {
-        doLicense(true);
+        doLicense(true, false);
       }
     }
   }
@@ -317,6 +327,11 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       mediaCrypto = mediaDrm.createMediaCrypto(sessionId);
       eventDispatcher.dispatch(DefaultDrmSessionEventListener::onDrmSessionAcquired);
       state = STATE_OPENED;
+
+      // wiseplaydrmsdk因为需要sessionId，所以在openSession成功后在设置listener
+      if (mediaDrm.isUseWisePlayDrmSDK()) {
+        provisioningManager.provisionOpenSessionSuccess(this);
+      }
       Assertions.checkNotNull(sessionId);
       return true;
     } catch (NotProvisionedException e) {
@@ -343,7 +358,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       provisioningManager.onProvisionError((Exception) response);
       return;
     }
-
+    Log.i(TAG, Util.fromUtf8Bytes((byte[]) response));
     try {
       mediaDrm.provideProvisionResponse((byte[]) response);
     } catch (Exception e) {
@@ -354,8 +369,14 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
     provisioningManager.onProvisionCompleted();
   }
 
+  /**
+   * 处理license相关请求操作
+   *
+   * @param allowRetry 是否允许重试
+   * @param isKeysRequired 是否需要带上上次请求的license数据，目前仅在renew时传true，其他情况传false
+   */
   @RequiresNonNull("sessionId")
-  private void doLicense(boolean allowRetry) {
+  private void doLicense(boolean allowRetry, boolean isKeysRequired) {
     if (isPlaceholderSession) {
       return;
     }
@@ -364,7 +385,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       case DefaultDrmSessionManager.MODE_PLAYBACK:
       case DefaultDrmSessionManager.MODE_QUERY:
         if (offlineLicenseKeySetId == null) {
-          postKeyRequest(sessionId, ExoMediaDrm.KEY_TYPE_STREAMING, allowRetry);
+          postKeyRequest(sessionId, ExoMediaDrm.KEY_TYPE_STREAMING, allowRetry, isKeysRequired);
         } else if (state == STATE_OPENED_WITH_KEYS || restoreKeys()) {
           long licenseDurationRemainingSec = getLicenseDurationRemainingSec();
           if (mode == DefaultDrmSessionManager.MODE_PLAYBACK
@@ -374,7 +395,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
                 "Offline license has expired or will expire soon. "
                     + "Remaining seconds: "
                     + licenseDurationRemainingSec);
-            postKeyRequest(sessionId, ExoMediaDrm.KEY_TYPE_OFFLINE, allowRetry);
+            postKeyRequest(sessionId, ExoMediaDrm.KEY_TYPE_OFFLINE, allowRetry, isKeysRequired);
           } else if (licenseDurationRemainingSec <= 0) {
             onError(new KeysExpiredException());
           } else {
@@ -385,7 +406,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
         break;
       case DefaultDrmSessionManager.MODE_DOWNLOAD:
         if (offlineLicenseKeySetId == null || restoreKeys()) {
-          postKeyRequest(sessionId, ExoMediaDrm.KEY_TYPE_OFFLINE, allowRetry);
+          postKeyRequest(sessionId, ExoMediaDrm.KEY_TYPE_OFFLINE, allowRetry, isKeysRequired);
         }
         break;
       case DefaultDrmSessionManager.MODE_RELEASE:
@@ -394,7 +415,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
         // It's not necessary to restore the key (and open a session to do that) before releasing it
         // but this serves as a good sanity/fast-failure check.
         if (restoreKeys()) {
-          postKeyRequest(offlineLicenseKeySetId, ExoMediaDrm.KEY_TYPE_RELEASE, allowRetry);
+          postKeyRequest(offlineLicenseKeySetId, ExoMediaDrm.KEY_TYPE_RELEASE, allowRetry, isKeysRequired);
         }
         break;
       default:
@@ -423,9 +444,23 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
     return Math.min(pair.first, pair.second);
   }
 
-  private void postKeyRequest(byte[] scope, int type, boolean allowRetry) {
+  /**
+   * 发送license request请求
+   *
+   * @param scope sessionId或keySetId
+   * @param type 请求类型
+   * @param allowRetry 是否允许重试
+   * @param isKeysRequired 请求license的时候是否需要带上上次license数据，
+   *                       目前仅在renew的时候需要使用true，即请求时schemeDatas传null
+   */
+  private void postKeyRequest(byte[] scope, int type, boolean allowRetry, boolean isKeysRequired) {
     try {
-      currentKeyRequest = mediaDrm.getKeyRequest(scope, schemeDatas, type, keyRequestParameters);
+      if (isKeysRequired) {
+        currentKeyRequest = mediaDrm.getKeyRequest(scope, null, type, keyRequestParameters);
+      } else {
+        currentKeyRequest = mediaDrm.getKeyRequest(scope, schemeDatas, type, keyRequestParameters);
+      }
+
       Util.castNonNull(requestHandler)
           .post(MSG_KEYS, Assertions.checkNotNull(currentKeyRequest), allowRetry);
     } catch (Exception e) {
@@ -444,14 +479,27 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       onKeysError((Exception) response);
       return;
     }
-
+    Log.i(TAG, Util.fromUtf8Bytes((byte[]) response));
     try {
       byte[] responseData = (byte[]) response;
       if (mode == DefaultDrmSessionManager.MODE_RELEASE) {
-        mediaDrm.provideKeyResponse(Util.castNonNull(offlineLicenseKeySetId), responseData);
+        byte[] keySetId = Util.castNonNull(offlineLicenseKeySetId);
+        // 在删除操作需要通知服务端时
+        // 通过keyType = ExoMediaDrm.KEY_TYPE_RELEASE释放license，
+        // 返回的响应数据状态需要是accessDenied才可删除license成功
+        if (mediaDrm.isUseWisePlayDrmSDK()) {
+          mediaDrm.provideKeyResponse(mode, keySetId, responseData);
+        } else {
+          mediaDrm.provideKeyResponse(keySetId, responseData);
+        }
         eventDispatcher.dispatch(DefaultDrmSessionEventListener::onDrmKeysRestored);
       } else {
-        byte[] keySetId = mediaDrm.provideKeyResponse(sessionId, responseData);
+        byte[] keySetId = null;
+        if (mediaDrm.isUseWisePlayDrmSDK()) {
+          keySetId = mediaDrm.provideKeyResponse(mode, sessionId, responseData);
+        } else {
+          keySetId = mediaDrm.provideKeyResponse(sessionId, responseData);
+        }
         if ((mode == DefaultDrmSessionManager.MODE_DOWNLOAD
                 || (mode == DefaultDrmSessionManager.MODE_PLAYBACK
                     && offlineLicenseKeySetId != null))
@@ -470,7 +518,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
   private void onKeysRequired() {
     if (mode == DefaultDrmSessionManager.MODE_PLAYBACK && state == STATE_OPENED_WITH_KEYS) {
       Util.castNonNull(sessionId);
-      doLicense(/* allowRetry= */ false);
+      doLicense(/* allowRetry= */ false, true);
     }
   }
 
@@ -603,5 +651,23 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       this.startTimeMs = startTimeMs;
       this.request = request;
     }
+  }
+
+
+  //
+  // 以下处理drmsdk解密数据相关业务
+  //
+
+  @Override
+  public boolean isUseWisePlayDrmSDK() {
+    return mediaDrm.isUseWisePlayDrmSDK();
+  }
+
+  @Override
+  public byte[] decryptData(DrmCryptoInfo cryptoInfo, byte[] srcPtr) throws MediaCodec.CryptoException {
+    if (isUseWisePlayDrmSDK()) {
+      return mediaDrm.decryptData(cryptoInfo, srcPtr);
+    }
+    return new byte[0];
   }
 }

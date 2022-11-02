@@ -72,6 +72,7 @@ public class SampleChooserActivity extends AppCompatActivity
   private MenuItem preferExtensionDecodersMenuItem;
   private MenuItem randomAbrMenuItem;
   private MenuItem tunnelingMenuItem;
+  private MenuItem useWisePlayDrmMenuItem;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,13 @@ public class SampleChooserActivity extends AppCompatActivity
     preferExtensionDecodersMenuItem.setVisible(useExtensionRenderers);
     randomAbrMenuItem = menu.findItem(R.id.random_abr);
     tunnelingMenuItem = menu.findItem(R.id.tunneling);
+
+    useWisePlayDrmMenuItem = menu.findItem(R.id.use_wiseplaydrm);
+
+    // 读取配置文件中的状态，重新设置
+    boolean isChecked = Util.isUseWisePlayDrmSDK();
+    useWisePlayDrmMenuItem.setChecked(isChecked);
+
     if (Util.SDK_INT < 21) {
       tunnelingMenuItem.setEnabled(false);
     }
@@ -137,6 +145,9 @@ public class SampleChooserActivity extends AppCompatActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     item.setChecked(!item.isChecked());
+    if (item == useWisePlayDrmMenuItem) {
+      Util.setUseWisePlayDrmSdk(item.isChecked());
+    }
     return true;
   }
 

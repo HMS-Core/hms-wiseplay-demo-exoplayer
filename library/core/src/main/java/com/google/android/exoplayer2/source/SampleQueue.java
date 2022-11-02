@@ -793,7 +793,7 @@ public class SampleQueue implements TrackOutput {
     Looper playbackLooper = Assertions.checkNotNull(Looper.myLooper());
     currentDrmSession =
         newDrmInitData != null
-            ? drmSessionManager.acquireSession(playbackLooper, newDrmInitData)
+            ? drmSessionManager.acquireSession(playbackLooper, newDrmInitData, newFormat)
             : drmSessionManager.acquirePlaceholderSession(
                 playbackLooper, MimeTypes.getTrackType(newFormat.sampleMimeType));
     outputFormatHolder.drmSession = currentDrmSession;

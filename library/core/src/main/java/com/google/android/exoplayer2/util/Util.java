@@ -58,6 +58,7 @@ import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.audio.AudioRendererEventListener;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.util.sp.SPStoreUtil;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -527,7 +528,10 @@ public final class Util {
    * @return The string.
    */
   public static String fromUtf8Bytes(byte[] bytes) {
-    return new String(bytes, Charset.forName(C.UTF8_NAME));
+    if (bytes != null ) {
+      return new String(bytes, Charset.forName(C.UTF8_NAME));
+    }
+    return "";
   }
 
   /**
@@ -2302,4 +2306,62 @@ public final class Util {
     0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF, 0xFA, 0xFD, 0xF4,
     0xF3
   };
+
+  /**
+   * int转byte[]高字节在前（高字节序）低位在后
+   *
+   * @param num 需要转换的数字
+   * @return 转换后的byte
+   */
+  public static byte[] int2bytes(int num){
+    byte[] result = new byte[4];
+    result[0] = (byte)((num >>> 24) & 0xff);//说明一
+    result[1] = (byte)((num >>> 16)& 0xff );
+    result[2] = (byte)((num >>> 8) & 0xff );
+    result[3] = (byte)((num >>> 0) & 0xff );
+    return result;
+  }
+
+  /**
+   * byte[]转int高字节在前（高字节序)低位在后
+   *
+   * @param bytes 需要转换的字节数组
+   * @return 转换后的数字
+   */
+  public static int bytes2int(byte[] bytes) {
+    int res = 0;
+    for (int i = 0; i < bytes.length; i++) {
+      res += (bytes[i] & 0xff) << ((3 - i) * 8);
+    }
+    return res;
+  }
+
+  /**
+   * 输入流关闭方对象
+   *
+   * @param closed 待关闭对对象
+   */
+  public static void close(final Closeable closed) {
+    if (null == closed) {
+      return;
+    }
+
+    try {
+      // 关闭对象
+      closed.close();
+    } catch (Exception e) {
+      Log.e(TAG, e.getMessage());
+    }
+  }
+
+  // 配置是否使用wiseplay drm sdk
+  private static final String USE_WISE_PLAY_DRM_SDK = "use_wise_play_drm_sdk";
+
+  public static boolean isUseWisePlayDrmSDK() {
+    return SPStoreUtil.getBoolean(USE_WISE_PLAY_DRM_SDK);
+  }
+
+  public static void setUseWisePlayDrmSdk(boolean useWisePlayDrmSdk) {
+    SPStoreUtil.put(USE_WISE_PLAY_DRM_SDK, useWisePlayDrmSdk);
+  }
 }

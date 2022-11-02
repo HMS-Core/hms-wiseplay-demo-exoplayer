@@ -24,6 +24,7 @@ import android.util.Pair;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Mode;
 import com.google.android.exoplayer2.drm.DrmSession.DrmSessionException;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
@@ -37,6 +38,9 @@ import java.util.UUID;
 @TargetApi(18)
 @RequiresApi(18)
 public final class OfflineLicenseHelper<T extends ExoMediaCrypto> {
+
+  private static final Format FORMAT_WITH_EMPTY_DRM_INIT_DATA =
+          Format.createSampleFormat("", "", "",0 , new DrmInitData());
 
   private static final DrmInitData DUMMY_DRM_INIT_DATA = new DrmInitData();
 
@@ -257,7 +261,7 @@ public final class OfflineLicenseHelper<T extends ExoMediaCrypto> {
     drmSessionManager.setMode(licenseMode, offlineLicenseKeySetId);
     conditionVariable.close();
     DrmSession<T> drmSession = drmSessionManager.acquireSession(handlerThread.getLooper(),
-        drmInitData);
+        drmInitData, FORMAT_WITH_EMPTY_DRM_INIT_DATA);
     // Block current thread until key loading is finished
     conditionVariable.block();
     return drmSession;

@@ -320,7 +320,7 @@ public abstract class BaseRenderer implements Renderer, RendererCapabilities {
       }
       newSourceDrmSession =
           drmSessionManager.acquireSession(
-              Assertions.checkNotNull(Looper.myLooper()), newFormat.drmInitData);
+              Assertions.checkNotNull(Looper.myLooper()), newFormat.drmInitData, newFormat);
     }
     if (existingSourceSession != null) {
       existingSourceSession.release();

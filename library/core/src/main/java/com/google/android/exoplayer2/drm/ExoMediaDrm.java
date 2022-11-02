@@ -16,6 +16,7 @@
 package com.google.android.exoplayer2.drm;
 
 import android.media.DeniedByServerException;
+import android.media.MediaCodec;
 import android.media.MediaCryptoException;
 import android.media.MediaDrm;
 import android.media.MediaDrmException;
@@ -24,6 +25,9 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.drm.DrmInitData.SchemeData;
+import com.huawei.wiseplaydrmsdk.MediaKeySystemAPI;
+import com.huawei.wiseplaydrmsdk.common.DrmCryptoInfo;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -259,8 +263,10 @@ public interface ExoMediaDrm<T extends ExoMediaCrypto> {
 
   /** @see MediaDrm#provideKeyResponse(byte[], byte[]) */
   @Nullable
-  byte[] provideKeyResponse(byte[] scope, byte[] response)
-      throws NotProvisionedException, DeniedByServerException;
+  default byte[] provideKeyResponse(byte[] scope, byte[] response)
+      throws NotProvisionedException, DeniedByServerException {
+    return null;
+  }
 
   /**
    * @see MediaDrm#getProvisionRequest()
@@ -339,4 +345,48 @@ public interface ExoMediaDrm<T extends ExoMediaCrypto> {
    */
   @Nullable
   Class<T> getExoMediaCryptoType();
+
+  //
+  // 以下接口为wiseplaydrm特有接口
+  //
+
+  /**
+   * Provides a key response for the last request to be generated using {@link #getKeyRequest}.
+   *
+   * @param keyType request keyType
+   * @param scope If the request had type {@link #KEY_TYPE_STREAMING} or {@link #KEY_TYPE_OFFLINE},
+   *        the ID of the session to provide the keys to. If {@code keyType} is {@link
+   *        #KEY_TYPE_RELEASE}, the {@code keySetId} of the keys being released.
+   * @param response The response data from the server.
+   * @return If the request had type {@link #KEY_TYPE_OFFLINE}, the {@code keySetId} for the offline
+   *         keys. An empty byte array or {@code null} may be returned for other cases.
+   * @throws NotProvisionedException If the response indicates that provisioning is needed.
+   */
+  @Nullable
+  default byte[] provideKeyResponse(int keyType, byte[] scope, byte[] response) throws NotProvisionedException {
+    return new byte[0];
+  }
+
+  default boolean initWisePlayMediaDrm(@MediaKeySystemAPI.DrmLogLevel int logLevel, String appProvider,
+                                       String appVersion) {
+    return false;
+  }
+
+  default boolean isUseWisePlayDrmSDK() {
+    return false;
+  }
+
+  default void removeOfflineLicense(byte[] keySetId) {
+  }
+
+  /**
+   * drmsdk解密数据
+   *
+   * @param cryptoInfo 解密信息
+   * @param srcPtr 加密数据
+   * @return 解密后的数据
+   */
+  default byte[] decryptData(DrmCryptoInfo cryptoInfo, byte[] srcPtr) throws MediaCodec.CryptoException {
+    return new byte[0];
+  }
 }

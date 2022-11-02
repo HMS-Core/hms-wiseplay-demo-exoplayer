@@ -30,6 +30,8 @@ public final class WidevineUtil {
   /** Widevine specific key status field name for the remaining playback duration, in seconds. */
   public static final String PROPERTY_PLAYBACK_DURATION_REMAINING = "PlaybackDurationRemaining";
 
+  public static final String PROPERTY_RENEWAL_SERVER_URL = "RenewalServerUrl";
+
   private WidevineUtil() {}
 
   /**

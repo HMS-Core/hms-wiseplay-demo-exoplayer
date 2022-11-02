@@ -73,4 +73,6 @@
 
   <string name="tunneling">Request multimedia tunneling</string>
 
+  <string name="use_wiseplaydrm">Use WisePlayDrmSDK</string>
+
 </resources>

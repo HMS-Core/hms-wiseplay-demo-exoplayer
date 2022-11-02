@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Log;
+import com.google.android.exoplayer2.util.sp.SPStoreMgr;
 import com.google.android.exoplayer2.util.Util;
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +76,7 @@ public class DemoApplication extends Application {
     super.onCreate();
     userAgent = Util.getUserAgent(this, "ExoPlayerDemo");
     handleSSLHandshake();
+    SPStoreMgr.init(this);
   }
 
   /** Returns a {@link DataSource.Factory}. */

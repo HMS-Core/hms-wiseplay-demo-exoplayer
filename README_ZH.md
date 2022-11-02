@@ -7,18 +7,19 @@
 
 ## 目录
 
- * [介绍](#介绍)
- * [开始](#开始)
- * [开发环境](#开发环境)
- * [开源许可](#开源许可)
+* [介绍](#介绍)
+* [开始](#开始)
+* [开发环境](#开发环境)
+* [开源许可](#开源许可)
 
 ## 介绍
 
 这个Demo演示了如何在开源播放器ExoPlayer中集成WisePlay DRM，关于ExoPlayer的更多介绍，请参考其官网：[ExoPlayer官网](https://exoplayer.dev/)
 
 Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/ExoPlayer/releases/tag/r2.11.4), 演示了如何在线播放WisePlay加密片源
-hls和sm4支持。
-代码中对ExoPlayer的修改均以关键如下的注释标记 "*Begin add for WisePlay*"或"*Begin mod for WisePlay*"，"*Begin add for sm4*"或"*Begin mod for sm4*" ，
+### 1. 支持HLS和SM4
+代码中对ExoPlayer的修改均以关键如下的注释标记
+"*Begin add for WisePlay*"或"*Begin mod for WisePlay*"，"*Begin add for sm4*"或"*Begin mod for sm4*"，
 搜索代码的改动点，可根据这些关键字进行搜索。
 
 例如，在类"com.google.android.exoplayer2.C"中, 修改点如下:
@@ -40,6 +41,21 @@ hls和sm4支持。
 ```
 
 想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [WisePlay DRM Demo](https://github.com/HMS-Core/hms-wiseplay-demo) 以及[开发者联盟官网](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)
+
+### 2. 支持WisePlayDrmSDK软解，实现对provision、license和片源解密相关功能。
+
+**使用方法：**
+1. 需联系服务提供商获取WisePlayDrmSDK商用版本SDK，签名和说明文档
+
+2. 将获取到的WisePlayDrmSDK aar文件放到如下目录，删除原有的测试文件`wiseplaydrmsdk-test.aar`
+   `hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/`
+
+3. 将测试片源内置到`hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/`目录中，格式参考exoplayer原有的片源格式
+   `media.exolist.json`
+
+4. 使用android studio运行demo app，在片源列表页面右上角“更多”按钮勾选“Use WisePlayDrmSDK”复选框以启用WisePlayDrmSDK，之后播放片源即可使用WisePlayDrmSDK相关功能
+
+**demo仅做代码参考，更多WisePlayDrmSDK使用请需联系服务提供商**
 
 
 ## 开始

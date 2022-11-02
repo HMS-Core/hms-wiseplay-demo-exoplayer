@@ -18,6 +18,7 @@ package com.google.android.exoplayer2.drm;
 import android.os.Looper;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.drm.DrmInitData.SchemeData;
 
 /**
@@ -42,7 +43,7 @@ public interface DrmSessionManager<T extends ExoMediaCrypto> {
 
         @Override
         public DrmSession<ExoMediaCrypto> acquireSession(
-            Looper playbackLooper, DrmInitData drmInitData) {
+            Looper playbackLooper, DrmInitData drmInitData, Format format) {
           return new ErrorStateDrmSession<>(
               new DrmSession.DrmSessionException(
                   new UnsupportedDrmException(UnsupportedDrmException.REASON_UNSUPPORTED_SCHEME)));
@@ -110,7 +111,7 @@ public interface DrmSessionManager<T extends ExoMediaCrypto> {
    *     non-null {@link SchemeData#data}.
    * @return The DRM session.
    */
-  DrmSession<T> acquireSession(Looper playbackLooper, DrmInitData drmInitData);
+  DrmSession<T> acquireSession(Looper playbackLooper, DrmInitData drmInitData, Format format);
 
   /**
    * Returns the {@link ExoMediaCrypto} type returned by sessions acquired using the given {@link

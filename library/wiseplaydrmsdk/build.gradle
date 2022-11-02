@@ -1,0 +1,8 @@
+configurations.maybeCreate("default")
+FileTree tree = fileTree(dir: ".")
+tree.include "wiseplaydrmsdk-*.aar"
+Set<File> fileSets = tree.files
+if (fileSets.size() != 1) {
+    throw new Exception("there can only have one wiseplaydrmsdk-*.aar in wiseplaydrmsdk dir.")
+}
+artifacts.add("default", fileSets[0])

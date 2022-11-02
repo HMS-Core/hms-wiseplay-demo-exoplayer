@@ -111,9 +111,18 @@ public final class HttpMediaDrmCallback implements MediaDrmCallback {
 
   @Override
   public byte[] executeProvisionRequest(UUID uuid, ProvisionRequest request) throws IOException {
-    String url =
-        request.getDefaultUrl() + "&signedRequest=" + Util.fromUtf8Bytes(request.getData());
-    return executePost(dataSourceFactory, url, /* httpBody= */ null, /* requestProperties= */ null);
+    // 兼容wisePlay请求，防止将request.getData()拼接在url后面
+    // 导致url太长返回414错误码
+    if (uuid.equals(C.WISEPLAY_UUID)) {
+      Map<String, String> requestProperties = new HashMap<>();
+      requestProperties.put("Content-Type", "application/json");
+      requestProperties.put("x-appVer", "999999");
+      return executePost(dataSourceFactory, request.getDefaultUrl(), request.getData(), requestProperties);
+    } else {
+          String url =
+              request.getDefaultUrl() + "&signedRequest=" + Util.fromUtf8Bytes(request.getData());
+          return executePost(dataSourceFactory, url, /* httpBody= */ null, /* requestProperties= */ null);
+    }
   }
 
   @Override

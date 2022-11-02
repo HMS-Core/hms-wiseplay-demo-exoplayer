@@ -47,6 +47,7 @@ import com.google.android.exoplayer2.drm.ExoMediaCrypto;
 import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
 import com.google.android.exoplayer2.drm.HttpMediaDrmCallback;
 import com.google.android.exoplayer2.drm.MediaDrmCallback;
+import com.google.android.exoplayer2.drm.WpMediaDrm;
 import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.DecoderInitializationException;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil.DecoderQueryException;
 import com.google.android.exoplayer2.offline.DownloadHelper;
@@ -485,14 +486,18 @@ public class PlayerActivity extends AppCompatActivity
       drmSessionManager = DrmSessionManager.getDummyDrmSessionManager();
     } else if (Util.SDK_INT < 18) {
       errorStringId = R.string.error_drm_unsupported_before_api_18;
-    } else if (!MediaDrm.isCryptoSchemeSupported(drmInfo.drmScheme)) {
+    } else if (!MediaDrm.isCryptoSchemeSupported(drmInfo.drmScheme) && !Util.isUseWisePlayDrmSDK()) {
       errorStringId = R.string.error_drm_unsupported_scheme;
     } else {
+      // 判断是否使用wisePlayDrmSdk
+      boolean isUseWisePlayDrmSDK = Util.isUseWisePlayDrmSDK();
+
       MediaDrmCallback mediaDrmCallback =
           createMediaDrmCallback(drmInfo.drmLicenseUrl, drmInfo.drmKeyRequestProperties);
       drmSessionManager =
           new DefaultDrmSessionManager.Builder()
-              .setUuidAndExoMediaDrmProvider(drmInfo.drmScheme, FrameworkMediaDrm.DEFAULT_PROVIDER)
+              .setUuidAndExoMediaDrmProvider(drmInfo.drmScheme,
+                      isUseWisePlayDrmSDK ? WpMediaDrm.DEFAULT_PROVIDER : FrameworkMediaDrm.DEFAULT_PROVIDER)
               .setMultiSession(drmInfo.drmMultiSession)
               .build(mediaDrmCallback);
     }
@@ -755,6 +760,8 @@ public class PlayerActivity extends AppCompatActivity
                     R.string.error_instantiating_decoder,
                     decoderInitializationException.codecInfo.name);
           }
+        } else {
+          errorString = e.getMessage();
         }
       }
       return Pair.create(0, errorString);

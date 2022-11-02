@@ -26,6 +26,7 @@ import android.os.Message;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.drm.DrmInitData.SchemeData;
 import com.google.android.exoplayer2.drm.DrmSession.DrmSessionException;
 import com.google.android.exoplayer2.drm.ExoMediaDrm.OnEventListener;
@@ -391,7 +392,7 @@ public class DefaultDrmSessionManager<T extends ExoMediaCrypto> implements DrmSe
 
   /**
    * Sets the mode, which determines the role of sessions acquired from the instance. This must be
-   * called before {@link #acquireSession(Looper, DrmInitData)} or {@link
+   * called before {@link #acquireSession(Looper, DrmInitData, Format)} or {@link
    * #acquirePlaceholderSession} is called.
    *
    * <p>By default, the mode is {@link #MODE_PLAYBACK} and a streaming license is requested when
@@ -429,7 +430,9 @@ public class DefaultDrmSessionManager<T extends ExoMediaCrypto> implements DrmSe
     if (prepareCallsCount++ == 0) {
       Assertions.checkState(exoMediaDrm == null);
       exoMediaDrm = exoMediaDrmProvider.acquireExoMediaDrm(uuid);
-      exoMediaDrm.setOnEventListener(new MediaDrmEventListener());
+      if (!exoMediaDrm.isUseWisePlayDrmSDK()) {
+        exoMediaDrm.setOnEventListener(new MediaDrmEventListener());
+      }
     }
   }
 
@@ -471,7 +474,7 @@ public class DefaultDrmSessionManager<T extends ExoMediaCrypto> implements DrmSe
         // End add for sm4
       // API support for AES-CBC and pattern encryption was added in API 24. However, the
       // implementation was not stable until API 25.
-      return Util.SDK_INT >= 25;
+      return Util.SDK_INT >= 25 || Util.isUseWisePlayDrmSDK();
     }
     // Unknown schemes, assume one of them is supported.
     return true;
@@ -504,7 +507,7 @@ public class DefaultDrmSessionManager<T extends ExoMediaCrypto> implements DrmSe
   }
 
   @Override
-  public DrmSession<T> acquireSession(Looper playbackLooper, DrmInitData drmInitData) {
+  public DrmSession<T> acquireSession(Looper playbackLooper, DrmInitData drmInitData, Format format) {
     assertExpectedPlaybackLooper(playbackLooper);
     maybeCreateMediaDrmHandler(playbackLooper);
 
@@ -653,6 +656,14 @@ public class DefaultDrmSessionManager<T extends ExoMediaCrypto> implements DrmSe
   }
 
   private class ProvisioningManagerImpl implements DefaultDrmSession.ProvisioningManager<T> {
+
+    @Override
+    public void provisionOpenSessionSuccess(DefaultDrmSession session) {
+      if (exoMediaDrm != null) {
+        exoMediaDrm.setOnEventListener(new MediaDrmEventListener());
+      }
+    }
+
     @Override
     public void provisionRequired(DefaultDrmSession<T> session) {
       if (provisioningSessions.contains(session)) {

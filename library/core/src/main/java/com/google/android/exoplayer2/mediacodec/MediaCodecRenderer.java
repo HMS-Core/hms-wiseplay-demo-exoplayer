@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.FormatHolder;
+import com.google.android.exoplayer2.decoder.CryptoInfo;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.decoder.DecoderInputBuffer;
 import com.google.android.exoplayer2.drm.DrmSession;
@@ -50,6 +51,7 @@ import com.google.android.exoplayer2.util.NalUnitUtil;
 import com.google.android.exoplayer2.util.TimedValueQueue;
 import com.google.android.exoplayer2.util.TraceUtil;
 import com.google.android.exoplayer2.util.Util;
+import com.huawei.wiseplaydrmsdk.common.DrmCryptoInfo;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -58,6 +60,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * An abstract renderer that uses {@link MediaCodec} to decode samples for rendering.
@@ -558,7 +561,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
 
         String mimeType = inputFormat.sampleMimeType;
         if (codecDrmSession != null) {
-            if (mediaCrypto == null) {
+            if (mediaCrypto == null && !codecDrmSession.isUseWisePlayDrmSDK()) {
                 FrameworkMediaCrypto sessionMediaCrypto = codecDrmSession.getMediaCrypto();
                 if (sessionMediaCrypto == null) {
                     DrmSessionException drmError = codecDrmSession.getError();
@@ -1220,7 +1223,12 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
 
             if (bufferEncrypted) {
                 MediaCodec.CryptoInfo cryptoInfo = getFrameworkCryptoInfo(buffer, adaptiveReconfigurationBytes);
-                codec.queueSecureInputBuffer(inputIndex, 0, cryptoInfo, presentationTimeUs, 0);
+                if (codecDrmSession != null && codecDrmSession.isUseWisePlayDrmSDK()) {
+                    decryptMediaDataByWisePlayDrm(buffer.cryptoInfo);
+                    codec.queueInputBuffer(inputIndex, 0, buffer.data.limit(), presentationTimeUs, 0);
+                } else {
+                    codec.queueSecureInputBuffer(inputIndex, 0, cryptoInfo, presentationTimeUs, 0);
+                }
             } else {
                 codec.queueInputBuffer(inputIndex, 0, buffer.data.limit(), presentationTimeUs, 0);
             }
@@ -1232,6 +1240,57 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
             throw createRendererException(e, inputFormat);
         }
         return true;
+    }
+
+    private void decryptMediaDataByWisePlayDrm(CryptoInfo cryptoInfo) throws MediaCodec.CryptoException {
+        // 构造解密信息
+        DrmCryptoInfo infoJA = new DrmCryptoInfo();
+        infoJA.videoType = getVideoType();
+        infoJA.algType = cryptoInfo.mode;
+        infoJA.keyIdLen = cryptoInfo.key != null ? cryptoInfo.key.length : 0;
+        infoJA.keyId = cryptoInfo.key;
+        infoJA.ivLen = cryptoInfo.iv != null ? cryptoInfo.iv.length : 0;
+        infoJA.iv = cryptoInfo.iv;
+        infoJA.encryptBlocks = cryptoInfo.encryptedBlocks;
+        infoJA.skipBlocks = cryptoInfo.clearBlocks;
+        infoJA.subSampleNum = cryptoInfo.numSubSamples;
+        infoJA.clearHeaderLen = cryptoInfo.numBytesOfClearData;
+        infoJA.payLoadLen = cryptoInfo.numBytesOfEncryptedData;
+
+        if (buffer.data != null && buffer.data.hasRemaining()) {
+            int length = buffer.data.remaining();
+            byte[] bytes = new byte[length];
+            buffer.data.get(bytes,0, bytes.length);
+            // 获得解密数据
+            if (codecDrmSession != null) {
+                byte[] decryptMediaData = codecDrmSession.decryptData(infoJA, bytes);
+                // 在没有获取到license时，解密数据会返回为空
+                if (decryptMediaData != null) {
+                    ByteBuffer byteBuffer =  ByteBuffer.wrap(decryptMediaData);
+                    buffer.clear();
+                    buffer.data.put(byteBuffer);
+                    buffer.flip();
+                } else {
+                    Log.e(TAG, "end decryptData fail maybe the license or key is error");
+                }
+
+                onQueueInputBuffer(buffer);
+            }
+        }
+    }
+
+    private int getVideoType() {
+        int videoType = DrmCryptoInfo.VIDEO_TYPE_NOME;
+        if (inputFormat != null && inputFormat.sampleMimeType != null) {
+            String sampleMimeType = inputFormat.sampleMimeType.toLowerCase(Locale.ROOT);
+            if (sampleMimeType.equalsIgnoreCase("video/avc")) {
+                videoType = DrmCryptoInfo.VIDEO_TYPE_AVC;
+            } else if (sampleMimeType.equalsIgnoreCase("video/hevc")) {
+                videoType = DrmCryptoInfo.VIDEO_TYPE_HEVC;
+            }
+        }
+
+        return videoType;
     }
 
     private boolean shouldWaitForKeys(boolean bufferEncrypted) throws ExoPlaybackException {
