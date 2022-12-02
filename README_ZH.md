@@ -1,6 +1,5 @@
 # WisePlay DRM Demo Based On ExoPlayer #
 
-
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
 
 中文 | [English](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md)
@@ -25,35 +24,34 @@ Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/E
 例如，在类"com.google.android.exoplayer2.C"中, 修改点如下:
 ```java
   // Begin add for WisePlay
-  /**
-   * WisePlay UUID
-   */
-  public static final UUID WISEPLAY_UUID = new UUID(0X3D5E6D359B9A41E8L, 0XB843DD3C6E72C42CL);
-  // End add for WisePlay
+/**
+ * WisePlay UUID
+ */
+public static final UUID WISEPLAY_UUID = new UUID(0X3D5E6D359B9A41E8L, 0XB843DD3C6E72C42CL);
+// End add for WisePlay
 
-  // Begin add for sm4
-  /** "sm4c" scheme type name as defined in ISO/IEC 23001-7:2016. */
-  public static final String CENC_TYPE_sm4c = "sm4c";
+// Begin add for sm4
+/** "sm4c" scheme type name as defined in ISO/IEC 23001-7:2016. */
+public static final String CENC_TYPE_sm4c = "sm4c";
 
-  /** "sm4s" scheme type name as defined in ISO/IEC 23001-7:2016. */
-  public static final String CENC_TYPE_sm4s = "sm4s";
-  // End add for sm4
+/** "sm4s" scheme type name as defined in ISO/IEC 23001-7:2016. */
+public static final String CENC_TYPE_sm4s = "sm4s";
+// End add for sm4
 ```
 
 想了解更多WisePlay处理License的代码演示，请参考WisePlay的Demo代码仓 [WisePlay DRM Demo](https://github.com/HMS-Core/hms-wiseplay-demo) 以及[开发者联盟官网](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)
 
-### 2. 支持WisePlayDrmSDK软解，实现对provision、license和片源解密相关功能。
+### 2. 支持WisePlayDrmSDK软解，实现Provision、License和片源解密等相关功能。
 
 **使用方法：**
-1. 需联系服务提供商获取WisePlayDrmSDK商用版本SDK，签名和说明文档
+1. 需联系服务提供商获取WisePlayDrmSDK**商用JAVA版本SDK**，**签名**和**说明文档**
 
-2. 将获取到的WisePlayDrmSDK aar文件放到如下目录，删除原有的测试文件`wiseplaydrmsdk-test.aar`
+2. 将获取到的`WisePlayDrmSDK.aar`文件放到如下目录并删除原有的测试文件`wiseplaydrmsdk-test.aar`
    `hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/`
 
-3. 将测试片源内置到`hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/`目录中，格式参考exoplayer原有的片源格式
-   `media.exolist.json`
+3. 将测试片源内置到`hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/`目录中，格式参考exoplayer原有的片源`media.exolist.json`格式
 
-4. 使用android studio运行demo app，在片源列表页面右上角“更多”按钮勾选“Use WisePlayDrmSDK”复选框以启用WisePlayDrmSDK，之后播放片源即可使用WisePlayDrmSDK相关功能
+4. 使用android studio编译main demo并安装，点击demo app片源列表页面右上角“更多”按钮勾选“Use WisePlayDrmSDK”复选框以启用WisePlayDrmSDK，之后播放片源即可使用WisePlayDrmSDK相关功能
 
 **demo仅做代码参考，更多WisePlayDrmSDK使用请需联系服务提供商**
 
@@ -69,7 +67,7 @@ ExoPlayer Demo执行的细节，可参考其[官方说明](https://github.com/go
 
 ## 开发环境
 
-Android SDK Version >= 23以及JDK version >= 1.7
+Android SDK Version >= 23以及JDK version >= 11
 
 ## 技术支持
 如果您对HMS Core还处于评估阶段，可在[Reddit社区](https://www.reddit.com/r/HMSCore/)获取关于HMS Core的最新讯息，并与其他开发者交流见解。

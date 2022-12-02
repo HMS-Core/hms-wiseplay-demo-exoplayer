@@ -39,6 +39,11 @@
       android:name="com.google.android.exoplayer2.demo.DemoApplication"
       tools:ignore="UnusedAttribute">
 
+    <!--  wiseplaydrmsdk test signature  -->
+    <meta-data
+        android:name="d29959b10e60008abffcc2dffb9a7b92fa29c37ccfc58d056d4be86bf3c93c2c"
+        android:value="ceJ1uDbU42SUfmrYNdu7a22/mbk+PNwRo/NB17/g1fQEgdkxJg4R/y2A+vro9NpbYetByYjHsjrcfw3Wy0tB5eIlhpIT/HM2sediBssbn3NN/weU4d0pNuaKIJzBafdNK8li7dwztDDA86C1axeBfD6UZrNibeTgJyq/7hAwSuhlu26VLOJ9cZlYy115YvVOflL+AlX/zkwXE4j9v9fDHpAX7ZlBoNRiYqdT/ainxTYVjEAtGWkH6xqrQdHW7E6rKAMPLg4qycvWscub6xVDjsVB4MW8WEQ16Mly8Owb7FhrpuEwKdpWQPCwFu9Arcjg0iQ5exi8i8+60zD/+2Oh29csqnerGR5qfVOAXNZBvUmJjyCxLYT3Mr04ncBXLlXT2J2U0ROULcJ3Byn2mzuzrk6fzx8OPDxJ80zYwuGNADlqRIIx8MEM7aI6yEl0EyEQaqdXlCKfhoROTf85jJ8sBRrHp2C7nj0C6Iis60FHLXT0li1ewqf26FYnBAfcW3v9" />
+
     <activity android:name="com.google.android.exoplayer2.demo.SampleChooserActivity"
         android:configChanges="keyboardHidden"
         android:label="@string/application_name"
