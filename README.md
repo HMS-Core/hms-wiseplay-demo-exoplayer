@@ -2,7 +2,7 @@
 
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
 
-English | [中文](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/readme_zh.md)
+English | [中文](./README_ZH.md)
 
 ## Table of Contents
 
@@ -38,7 +38,7 @@ This demo provides an example of integrating WisePlay DRM with the ExoPlayer pro
 2. Supports software decoding based on the WisePlay DRM SDK, implementing functions such as device certificate application, application for the encrypted video source certificate, video source decoding, and more.
    How to use:
    1. Contact the service provider to obtain the WisePlay DRM SDK in Java version that is for commercial use, signature, and description file.
-   2. Place the obtained **WisePlayDrmSDK.aar** file under the **wiseplaydrmsdk-test.aarhms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/** directory and delete the original test file.
+   2. Place the obtained **wiseplaydrmsdk-release-[*versioncode*]-[*developername*].aar** file under the **hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/** directory and delete the original test file **wiseplaydrmsdk-test.aar**.
    3. Add the test video source file to the **hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/** directory. For details about the file format, you can refer to the **media.exolist.json** file that is the original video source of ExoPlayer.
    4. Use Android Studio to compile the main demo and install it. Tap More in the upper right corner of the demo app screen displaying a list of video sources. Tick the **Use WisePlayDrmSDK** checkbox to enable the WisePlay DRM SDK. Then, functions of the SDK will be available for video source playback.
 
@@ -57,7 +57,7 @@ The detail of run ExoPlayer demo, please follow [ExoPlayer's introduction](https
 
 ## Supported Environments
 
-Android SDK Version >= 23 and JDK version >= 11 is recommended.
+Android SDK Version >= 21 and JDK version >= 11 is recommended.
 
 ## Question or issues
 If you want to evaluate more about HMS Core,

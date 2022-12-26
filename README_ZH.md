@@ -2,7 +2,7 @@
 
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
 
-中文 | [English](https://github.com/HMS-Core/hms-wiseplay-demo-exoplayer/blob/master/README.md)
+中文 | [English](./README.md)
 
 ## 目录
 
@@ -44,30 +44,29 @@ public static final String CENC_TYPE_sm4s = "sm4s";
 ### 2. 支持WisePlayDrmSDK软解，实现Provision、License和片源解密等相关功能。
 
 **使用方法：**
-1. 需联系服务提供商获取WisePlayDrmSDK**商用JAVA版本SDK**，**签名**和**说明文档**
+1. 需联系服务提供商获取WisePlayDrmSDK**商用JAVA版本SDK**，**签名**和**说明文档**。
 
-2. 将获取到的`WisePlayDrmSDK.aar`文件放到如下目录并删除原有的测试文件`wiseplaydrmsdk-test.aar`
-   `hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/`
+2. 将获取到的 **wiseplaydrmsdk-release-[*versioncode*]-[*developername*].aar** 文件放到如下目录 **hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/** 并删除原有的测试文件 **wiseplaydrmsdk-test.aar**。
+   
+3. 将测试片源内置到 **hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/** 目录中，格式参考Exoplayer原有的片源 **media.exolist.json** 格式。
 
-3. 将测试片源内置到`hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/`目录中，格式参考exoplayer原有的片源`media.exolist.json`格式
+4. 使用android studio编译main demo并安装，点击demo app片源列表页面右上角“更多”按钮勾选“Use WisePlayDrmSDK”复选框以启用WisePlayDrmSDK，之后播放片源即可使用WisePlayDrmSDK相关功能。
 
-4. 使用android studio编译main demo并安装，点击demo app片源列表页面右上角“更多”按钮勾选“Use WisePlayDrmSDK”复选框以启用WisePlayDrmSDK，之后播放片源即可使用WisePlayDrmSDK相关功能
-
-**demo仅做代码参考，更多WisePlayDrmSDK使用请需联系服务提供商**
+**demo仅做代码参考，更多WisePlayDrmSDK使用请需联系服务提供商**。
 
 
 ## 开始
 
-使用Demo之前, 请确保手机上正确安装HMS Core 4.0+.
+使用Demo之前, 请确保手机上正确安装HMS Core 4.0+。
 
-1.检查Android Studio环境是否就绪，网络正常连接.
-2.运行Demo中的main demo工程.
+1.检查Android Studio环境是否就绪，网络正常连接。
+2.运行Demo中的main demo工程。
 
 ExoPlayer Demo执行的细节，可参考其[官方说明](https://github.com/google/ExoPlayer/blob/release-v2/demos/README.md)
 
 ## 开发环境
 
-Android SDK Version >= 23以及JDK version >= 11
+Android SDK Version >= 21以及JDK version >= 11
 
 ## 技术支持
 如果您对HMS Core还处于评估阶段，可在[Reddit社区](https://www.reddit.com/r/HMSCore/)获取关于HMS Core的最新讯息，并与其他开发者交流见解。
@@ -80,4 +79,4 @@ Android SDK Version >= 23以及JDK version >= 11
 
 ## 开源许可
 
-此Demo基于APL2.0 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+此Demo基于APL2.0 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
