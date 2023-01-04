@@ -23,7 +23,7 @@ Demo代码基于ExoPlayer的代码标签为[r2.11.4](https://github.com/google/E
 
 例如，在类"com.google.android.exoplayer2.C"中, 修改点如下:
 ```java
-  // Begin add for WisePlay
+// Begin add for WisePlay
 /**
  * WisePlay UUID
  */
@@ -44,23 +44,23 @@ public static final String CENC_TYPE_sm4s = "sm4s";
 ### 2. 支持WisePlayDrmSDK软解，实现Provision、License和片源解密等相关功能。
 
 **使用方法：**
-1. 需联系服务提供商获取WisePlayDrmSDK**商用JAVA版本SDK**，**签名**和**说明文档**。
+1. 请您联系华为工程师或DTA（北京寰宇信任公司）获取WisePlayDrmSDK**商用JAVA版本SDK**，**签名**和**说明文档**。
 
-2. 将获取到的 **wiseplaydrmsdk-release-[*versioncode*]-[*developername*].aar** 文件放到如下目录 **hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/** 并删除原有的测试文件 **wiseplaydrmsdk-test.aar**。
-   
+2. 将获取到的 **wiseplaydrmsdk-release-[*versionCode*]-[*developerName*].aar** 文件放到目录 **hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/** 并删除原有的测试文件 **wiseplaydrmsdk-test.aar**。
+
 3. 将测试片源内置到 **hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/** 目录中，格式参考Exoplayer原有的片源 **media.exolist.json** 格式。
 
 4. 使用android studio编译main demo并安装，点击demo app片源列表页面右上角“更多”按钮勾选“Use WisePlayDrmSDK”复选框以启用WisePlayDrmSDK，之后播放片源即可使用WisePlayDrmSDK相关功能。
 
-**demo仅做代码参考，更多WisePlayDrmSDK使用请需联系服务提供商**。
+**demo仅做代码参考，更多WisePlayDrmSDK使用请您联系华为工程师或DTA（北京寰宇信任公司）**。
 
 
 ## 开始
 
 使用Demo之前, 请确保手机上正确安装HMS Core 4.0+。
 
-1.检查Android Studio环境是否就绪，网络正常连接。
-2.运行Demo中的main demo工程。
+1. 检查Android Studio环境是否就绪，网络正常连接。
+2. 运行Demo中的main demo工程。
 
 ExoPlayer Demo执行的细节，可参考其[官方说明](https://github.com/google/ExoPlayer/blob/release-v2/demos/README.md)
 

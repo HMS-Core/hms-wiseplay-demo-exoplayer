@@ -34,18 +34,18 @@ This demo provides an example of integrating WisePlay DRM with the ExoPlayer pro
       public static final String CENC_TYPE_sm4s = "sm4s";
       // End add for sm4
     ```
+   
+   Find more about WisePlay DRM, for example, offline license management, please refer to another demo [WisePlay DRM Demo](https://github.com/HMS-Core/hms-wiseplay-demo) and [WisePlay DRM Official Website](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)
 
-2. Supports software decoding based on the WisePlay DRM SDK, implementing functions such as device certificate application, application for the encrypted video source certificate, video source decoding, and more.
+2. Supports software decoding based on the WisePlayDrmSDK, implementing functions such as device certificate application, application for the encrypted video source certificate, video source decoding, and more.
+
    How to use:
-   1. Contact the service provider to obtain the WisePlay DRM SDK in Java version that is for commercial use, signature, and description file.
+   1. Contact the Huawei engineers or DTA (Huanyu Trust (Beijing) Technology Co., Ltd) to obtain the WisePlayDrmSDK in Java version that is for commercial use, signature, and description file.
    2. Place the obtained **wiseplaydrmsdk-release-[*versioncode*]-[*developername*].aar** file under the **hms-wiseplay-demo-exoplayer/library/wiseplaydrmsdk/** directory and delete the original test file **wiseplaydrmsdk-test.aar**.
    3. Add the test video source file to the **hms-wiseplay-demo-exoplayer/demos/main/src/main/assets/** directory. For details about the file format, you can refer to the **media.exolist.json** file that is the original video source of ExoPlayer.
-   4. Use Android Studio to compile the main demo and install it. Tap More in the upper right corner of the demo app screen displaying a list of video sources. Tick the **Use WisePlayDrmSDK** checkbox to enable the WisePlay DRM SDK. Then, functions of the SDK will be available for video source playback.
+   4. Use Android Studio to compile the main demo and install it. Tap More in the upper right corner of the demo app screen displaying a list of video sources. Tick the **Use WisePlayDrmSDK** checkbox to enable the WisePlayDrmSDK. Then, functions of the SDK will be available for video source playback.
 
-   The demo is for reference only. For details about how to use the WisePlay DRM SDK, contact the service provider.
-
-Find more about WisePlay DRM, for example, offline license managment, please refer to another demo [WisePlay DRM Demo](https://github.com/HMS-Core/hms-wiseplay-demo) and [WisePlay DRM Official Website](https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/wiseplay-introduction)
-
+   The demo is for reference only. For details about how to use the WisePlayDrmSDK, contact the Huawei engineers or DTA (Huanyu Trust (Beijing) Technology Co., Ltd).
 
 ## Getting Started
 
