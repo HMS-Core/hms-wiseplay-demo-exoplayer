@@ -13,10 +13,6 @@ import java.util.Map;
 
 /**
  * SharedPreference存储管理类<BR>
- *
- * @author t00190975
- * @version [V1.0.0.300, 2018/1/16]
- * @since V1.0.0.300
  */
 public class SPStoreMgr {
     private static final SPStoreMgr INSTANCE = new SPStoreMgr();
