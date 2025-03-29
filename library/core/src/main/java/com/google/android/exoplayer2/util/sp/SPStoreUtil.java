@@ -19,10 +19,6 @@ import java.util.Map;
 
 /**
  * SharedPreference存储工具类<BR>
- *
- * @author t00190975
- * @version [V1.0.0.300, 2018/1/16]
- * @since V1.0.0.300
  */
 public final class SPStoreUtil {
     private static final String TAG = "SPStoreApi";
